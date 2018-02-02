@@ -1,0 +1,27 @@
+
+test.png
+size: 2048,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+cell
+  rotate: false
+  xy: 2, 258
+  size: 1113, 242
+  orig: 1113, 242
+  offset: 0, 0
+  index: -1
+continue
+  rotate: false
+  xy: 1117, 476
+  size: 424, 24
+  orig: 424, 24
+  offset: 0, 0
+  index: -1
+ground
+  rotate: false
+  xy: 2, 2
+  size: 954, 254
+  orig: 954, 254
+  offset: 0, 0
+  index: -1
