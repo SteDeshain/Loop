@@ -29,7 +29,6 @@ public class CircleBody extends AbstractBody
 		mBodyMargin = margin;
 		setPosition(position);
 		setSize(radius + mBodyMargin * 2, radius + mBodyMargin * 2);
-		setCenterOrigin();
 	}
 
 	@Override
@@ -46,7 +45,10 @@ public class CircleBody extends AbstractBody
 		
 		CircleShape circleShape = new CircleShape();
 		Vector2 size = getSize();
-		circleShape.setRadius(size.x / 2 - mBodyMargin);
+		Vector2 origin = getOrigin();
+		float radius = size.x / 2 - mBodyMargin;
+		circleShape.setRadius(radius);
+		circleShape.setPosition(new Vector2(radius - origin.x - mBodyMargin, radius - origin.y - mBodyMargin));
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = circleShape;
@@ -69,8 +71,7 @@ public class CircleBody extends AbstractBody
 		super.updatePhysics();
 		
 		final Vector2 position = mBody.getPosition();
-		final Vector2 size = getSize();
-		setPosition(position.x - size.x / 2, position.y - size.y / 2);
+		setPosition(position.x - getOrigin().x, position.y - getOrigin().y);
 		setRotation(mBody.getAngle() * MathUtils.radiansToDegrees);
 	}
 }

@@ -16,11 +16,13 @@ import com.stedeshain.loop.Engine.Component.Label;
 import com.stedeshain.loop.Engine.Component.Body.BoxBody;
 import com.stedeshain.loop.Engine.Component.Body.CircleBody;
 import com.stedeshain.loop.Engine.Scene.Scene;
+import com.stedeshain.loop.Engine.Utils.Level;
 import com.stedeshain.loop.Engine.Utils.Utils;
 
 public class TestScene extends Scene
 {
 	Label fpsLabel;
+	Level level;
 	
 	public TestScene(Game motherGame, Vector2 viewport)
 	{
@@ -31,24 +33,24 @@ public class TestScene extends Scene
 	public void create()
 	{
 		super.create();
-		
+
 		this.addPhysicsModule();
 		
+		level = new Level(this, "test");
+		level.init();
+		
+		fpsLabel = new Label("FPS:");
+		fpsLabel.setViewportAnchor(1, 1);
+		fpsLabel.setSourceAnchor(1, 1);
+		this.addComponent(fpsLabel);
+		
+		/**
 		TextureAtlas atlas = getMotherGame().getGlobalAssets().getTextureAtlas(Utils.getImageAssetPath("test.atlas"));
 		
 		BoxBody platform01 = new BoxBody(new Vector2(-5.5f, -3.8f), 2.5f, false, atlas.findRegion("ground"));
 		platform01.setRestitutionDef(0);
+		platform01.setCenterOrigin();
 		this.addComponent(platform01);
-		
-		/**
-		BoxBody cell = new BoxBody(new Vector2(-5.1f, 4f), 2f, false, atlas.findRegion("cell"));
-		cell.setRestitutionDef(0);
-		this.addComponent(cell);
-		
-		BoxBody continuePlane = new BoxBody(new Vector2(1, 0), 0.3f, false, atlas.findRegion("continue"));
-		continuePlane.setRestitutionDef(0);
-		this.addComponent(continuePlane);
-		/**/
 		
 		float planeWidth = 0.5f;
 		int planeCount = 5;
@@ -57,6 +59,7 @@ public class TestScene extends Scene
 			float x = i * planeWidth + 1;
 			BoxBody plane = new BoxBody(new Vector2(x, -3.8f), new Vector2(planeWidth, 2.5f), null);
 			plane.setRestitutionDef(0);
+			plane.setCenterOrigin();
 			this.addComponent(plane);
 		}
 		
@@ -73,7 +76,6 @@ public class TestScene extends Scene
 		Body chainBody = this.getPhysicsWorld().createBody(bodyDef);
 		chainBody.createFixture(chain, 1);
 		
-		/**/
 		Vector2[] vecs2 = new Vector2[planeCount];
 		for(int i = 0; i < planeCount; i++)
 		{
@@ -89,7 +91,6 @@ public class TestScene extends Scene
 		Body chainBody2 = this.getPhysicsWorld().createBody(bodyDef2);
 		chainBody2.createFixture(chain2, 1);
 		chainBody2.setAngularVelocity(0.1f);
-		/**/
 		
 		chain.dispose();
 		chain2.dispose();
@@ -100,15 +101,18 @@ public class TestScene extends Scene
 		box.setBodyTypeDef(BodyType.DynamicBody);
 		box.setBulletDef(true);
 		box.setRestitutionDef(0);
+		box.setCenterOrigin();
 		
 		BoxBody staticBox = new BoxBody(new Vector2(-3f, -1f), new Vector2(1.5f, 0.5f), null);
 		staticBox.setRestitutionDef(0);
+		staticBox.setCenterOrigin();
 
 		TextureRegion grayRegion = Utils.getColorTextureRegion(Color.GRAY, 1, 1);
-		BoxBody staticBox2 = new BoxBody(new Vector2(-2f, -1f), new Vector2(1.5f, 0.5f), grayRegion);
+		BoxBody staticBox2 = new BoxBody(new Vector2(-2f, -1f), new Vector2(1.5f, 0.5f), 0.0f, 0.1f, grayRegion);
 		staticBox2.setBodyTypeDef(BodyType.DynamicBody);
 		staticBox2.setDensityDef(30);
 		staticBox2.setRestitutionDef(0);
+		staticBox2.setOriginFactor(0.4f, 0.3f);
 		
 		this.addComponent(box);
 		this.addComponent(staticBox);
@@ -121,13 +125,10 @@ public class TestScene extends Scene
 		jointDef.motorSpeed = 1;
 		jointDef.enableMotor = true;
 		this.getPhysicsWorld().createJoint(jointDef);
-		
-		fpsLabel = new Label("FPS:");
-		fpsLabel.setViewportAnchor(1, 1);
-		fpsLabel.setSourceAnchor(1, 1);
-		this.addComponent(fpsLabel);
-		
-		BoxBody player = new BoxBody(new Vector2(-4, 0), new Vector2(0.5f, 1f), null)
+
+		/**/
+		TextureRegion grayRegion = Utils.getColorTextureRegion(Color.GRAY, 1, 1);
+		BoxBody player = new BoxBody(new Vector2(0, 0), new Vector2(0.5f, 1f), grayRegion)
 		{
 			@Override
 			public void update(float deltaTime)
@@ -145,16 +146,19 @@ public class TestScene extends Scene
 				
 				if(Gdx.input.isKeyJustPressed(Keys.SPACE))
 				{
-					this.mBody.applyLinearImpulse(0, 15, this.getPosition().x, this.getPosition().y, true);
+					this.mBody.applyLinearImpulse(0, 25, this.getPosition().x, this.getPosition().y, true);
 				}
 			}
 		};
+		player.setOwnAssets(true);
+		player.setCenterOrigin();
 		player.setDensityDef(10);
 		player.setFixedRotationDef(true);
 		player.setBodyTypeDef(BodyType.DynamicBody);
 		player.setFrictionDef(0.9f);
 		player.setRestitutionDef(0);
 		this.addComponent(player);
+		/**/
 	}
 	
 	/**/
@@ -206,5 +210,13 @@ public class TestScene extends Scene
 	public boolean onKeyReleased(int keycode)
 	{
 		return false;
+	}
+	
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		
+		level.dispose();
 	}
 }

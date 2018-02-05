@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.stedeshain.loop.Engine.Scene.Scene;
+import com.stedeshain.loop.Engine.Utils.Utils;
 import com.sun.istack.internal.NotNull;
 
 /**
@@ -46,7 +47,7 @@ public class Button extends UIComponent implements Selectable
 	 */
 	public Button()
 	{
-		this("Button", new BitmapFont());
+		this("Button", Utils.getDefaultFont());
 	}
 	/**
 	 * Create a Button only has a picture

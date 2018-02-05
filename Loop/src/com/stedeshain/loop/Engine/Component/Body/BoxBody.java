@@ -24,7 +24,7 @@ public class BoxBody extends AbstractBody
 	}
 	/**
 	 * 
-	 * @param position : center position
+	 * @param position : origin position
 	 * @param specifiedSize : given one value of size (height or width), to calculate another value
 	 * @param specifyWidth : true to specify width, false to specify height
 	 * @param horizontalMargin
@@ -50,11 +50,10 @@ public class BoxBody extends AbstractBody
 		}
 		size.add(mHorizontalBodyMargin * 2, mVerticalBodyMargin * 2);
 		setSize(size);
-		setCenterOrigin();
 	}
 	/**
 	 * 
-	 * @param position : center position
+	 * @param position : origin position
 	 * @param size : body size
 	 * @param textureRegion
 	 */
@@ -73,7 +72,6 @@ public class BoxBody extends AbstractBody
 		setPosition(position);
 		size.add(mHorizontalBodyMargin * 2, mVerticalBodyMargin * 2);
 		setSize(size);
-		setCenterOrigin();
 	}
 	
 	@Override
@@ -90,7 +88,13 @@ public class BoxBody extends AbstractBody
 		
 		PolygonShape boxShape = new PolygonShape();
 		final Vector2 size = getSize();
-		boxShape.setAsBox(size.x / 2 - mHorizontalBodyMargin, size.y / 2 - mHorizontalBodyMargin);
+		Vector2 origin = getOrigin();
+		float bodyHalfWidth = size.x / 2 - mHorizontalBodyMargin;
+		float bodyHalfHeight = size.y / 2 - mVerticalBodyMargin;
+		boxShape.setAsBox(bodyHalfWidth, bodyHalfHeight,
+				new Vector2(bodyHalfWidth - origin.x + mHorizontalBodyMargin, 
+						bodyHalfHeight - origin.y + mVerticalBodyMargin), 
+				0f);
 		
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = boxShape;
@@ -108,8 +112,7 @@ public class BoxBody extends AbstractBody
 		super.updatePhysics();
 		
 		final Vector2 position = mBody.getPosition();
-		final Vector2 size = getSize();
-		setPosition(position.x - size.x / 2, position.y - size.y / 2);
+		setPosition(position.x - getOrigin().x, position.y - getOrigin().y);
 		setRotation(mBody.getAngle() * MathUtils.radiansToDegrees);
 	}
 	

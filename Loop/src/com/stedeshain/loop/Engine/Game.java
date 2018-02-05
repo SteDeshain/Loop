@@ -175,6 +175,11 @@ public abstract class Game implements ApplicationListener
 	{
 		return mGlobalAssets;
 	}
+	
+	public Globals getLuaGlobals()
+	{
+		return mLuaGlobals;
+	}
 
 	public boolean getDebugMode()
 	{

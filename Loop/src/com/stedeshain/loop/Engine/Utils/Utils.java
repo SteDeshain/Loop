@@ -37,6 +37,10 @@ public class Utils
 	{
 		return Constants.SCRIPTS_PATH + fileName;
 	}
+	public static String getLevelsPath(String fileName)
+	{
+		return Constants.LEVELS_PATH + fileName;
+	}
 
 	public static boolean isEqual(double a, double b) 
 	{  

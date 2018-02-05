@@ -147,7 +147,7 @@ public class Scene extends InputMultiplexer implements Disposable
 		lastDragPositions = new IntMap<TouchPositionInfo>();
 	}
 	
-	public void addComponent(SceneComponent component)
+	public void addComponent(@NotNull SceneComponent component)
 	{
 		if(mComponents.contains(component, true))
 			return;
@@ -161,7 +161,7 @@ public class Scene extends InputMultiplexer implements Disposable
 		component.setMotherScene(this);
 		component.create();
 	}
-	public void addComponent(DrawableComponent component)
+	public void addComponent(@NotNull DrawableComponent component)
 	{
 		if(mComponents.contains(component, true))
 			return;
@@ -176,7 +176,7 @@ public class Scene extends InputMultiplexer implements Disposable
 			component.create();
 		}
 	}
-	public void addComponent(UIComponent component)
+	public void addComponent(@NotNull UIComponent component)
 	{
 		if(mComponents.contains(component, true))
 			return;
@@ -190,7 +190,7 @@ public class Scene extends InputMultiplexer implements Disposable
 	 * add the component at the specific index of mComponents
 	 */
 	//TODO remove it !!!
-	public void insertComponent(SceneComponent component, int index)
+	public void insertComponent(@NotNull SceneComponent component, int index)
 	{
 		if(mComponents.contains(component, true))
 			return;
@@ -214,7 +214,7 @@ public class Scene extends InputMultiplexer implements Disposable
 	 * Can not be called in main loop, like update() or draw()
 	 * @param component
 	 */
-	private void removeComponent(SceneComponent component)
+	private void removeComponent(@NotNull SceneComponent component)
 	{
 		if(mBatch.isDrawing())
 		{
@@ -410,11 +410,13 @@ public class Scene extends InputMultiplexer implements Disposable
 			mShapeRenderer.setProjectionMatrix(mCamera.combined);
 			mShapeRenderer.begin();
 			
-			mShapeRenderer.setColor(Constants.MESS_CENTER_COLOR);
 			mWorld.getBodies(mBodiesForDebugDraw);
 			for(int i = mBodiesForDebugDraw.size - 1; i >= 0; i--)
 			{
-				//mShapeRenderer.x(mBodiesForDebugDraw.get(i).getPosition(), Constants.MESS_CENTER_CROSS_SIZE);
+				mShapeRenderer.setColor(Constants.BODY_ORIGIN_COLOR);
+				mShapeRenderer.x(mBodiesForDebugDraw.get(i).getPosition(), Constants.BODY_ORIGIN_CROSS_SIZE);
+				
+				mShapeRenderer.setColor(Constants.MESS_CENTER_COLOR);
 				mShapeRenderer.x(mBodiesForDebugDraw.get(i).getWorldCenter(), Constants.MESS_CENTER_CROSS_SIZE);
 			}
 			
@@ -542,6 +544,12 @@ public class Scene extends InputMultiplexer implements Disposable
 	public OrthographicCamera getCamera()
 	{
 		return mCamera;
+	}
+	public void setViewport(float width, float height)
+	{
+		mCamera.viewportWidth = width;
+		mCamera.viewportHeight = height;
+		mCamera.update();
 	}
 
 	/**

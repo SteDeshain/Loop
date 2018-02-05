@@ -19,11 +19,11 @@ public class DrawableComponent extends SceneComponent implements Disposable
 	 */
 	private long mDepth;
 	
-	private Vector2 mPosition;
-	private Vector2 mSize;
-	private Vector2 mOrigin;
-	private Vector2 mScale;
-	private float mRotation;
+	private Vector2 mPosition = new Vector2();
+	private Vector2 mSize = new Vector2();
+	private Vector2 mOrigin = new Vector2();
+	private Vector2 mScale = new Vector2(1f, 1f);
+	private float mRotation = 0f;
 	
 	private TextureRegion mTextureRegion;
 	private boolean mOwnAssets = false;
@@ -38,13 +38,7 @@ public class DrawableComponent extends SceneComponent implements Disposable
 	public DrawableComponent(TextureRegion textureRegion)
 	{
 		super();
-		
-		mPosition = new Vector2();
-		mSize = new Vector2();
-		mOrigin = new Vector2();
-		mScale = new Vector2(1f, 1f);
-		mRotation = 0f;
-		
+
 		setTextureRegion(textureRegion);
 	}
 
@@ -88,7 +82,7 @@ public class DrawableComponent extends SceneComponent implements Disposable
 	}
 	public void setPosition(@NotNull Vector2 position)
 	{
-		mPosition = position;
+		mPosition.set(position);
 	}
 	public void setPosition(float x, float y)
 	{
@@ -202,7 +196,7 @@ public class DrawableComponent extends SceneComponent implements Disposable
 	}
 	public void setDepth(long depth)
 	{
-		this.mDepth = depth;
+		mDepth = depth;
 	}
 	public void setDepthToBottom()
 	{
@@ -219,7 +213,7 @@ public class DrawableComponent extends SceneComponent implements Disposable
 	}
 	public void setScale(@NotNull Vector2 scale)
 	{
-		this.mScale = scale;
+		this.mScale.set(scale);
 	}
 	public void setScale(float xScale, float yScale)
 	{
@@ -252,7 +246,7 @@ public class DrawableComponent extends SceneComponent implements Disposable
 		return mOwnAssets;
 	}
 	/**
-	 * Set weather this component owns its all assets that are needed disposing.
+	 * Set weather this component owns its all assets that need disposing.
 	 * For example, if a DrawableComponent's mTextureRegion.getTexture() is not from AssetsHelper,
 	 * and only is used in this single one Component, we can tell this DrawableComponent
 	 * that it does own its all assets and can dispose its assets when it's disposed itself.
@@ -267,7 +261,6 @@ public class DrawableComponent extends SceneComponent implements Disposable
 	@Override
 	public void dispose()
 	{
-		//TODO Auto-generated method stub
 		if(mOwnAssets)
 		{
 			if(mTextureRegion != null)

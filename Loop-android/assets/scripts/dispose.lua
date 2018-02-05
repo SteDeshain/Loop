@@ -11,4 +11,4 @@ if(type(globalAssets) == "table") then
 	end
 end
 
-log.info("lua disposed " .. disposeCount .. " global assets used in script.")
+--log.info("lua disposed " .. disposeCount .. " global assets used in script.")

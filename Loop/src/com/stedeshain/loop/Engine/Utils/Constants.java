@@ -43,6 +43,7 @@ public class Constants
 	public static final String IMAGES_PATH = "images/";
 	public static final String MUSIC_PATH = "music/";
 	public static final String SCRIPTS_PATH = "scripts/";
+	public static final String LEVELS_PATH = "scripts/levels/";
 	public static final String SOUNDS_PATH = "sounds/";
 	
 	//debug use
@@ -51,4 +52,6 @@ public class Constants
 	
 	public static final float MESS_CENTER_CROSS_SIZE = 0.06f;
 	public static final Color MESS_CENTER_COLOR = Color.GREEN;
+	public static final float BODY_ORIGIN_CROSS_SIZE = 0.04f;
+	public static final Color BODY_ORIGIN_COLOR = Color.ORANGE;
 }
