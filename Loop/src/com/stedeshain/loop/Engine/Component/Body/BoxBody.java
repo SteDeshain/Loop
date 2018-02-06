@@ -81,6 +81,7 @@ public class BoxBody extends AbstractBody
 		
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = mBodyTypeDef;
+		bodyDef.angle = mAngleDef;
 		bodyDef.fixedRotation = mFixedRotationDef;
 		bodyDef.position.set(getPosition());
 		bodyDef.bullet = mBulletDef;

@@ -6,10 +6,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.stedeshain.loop.Engine.Component.DrawableComponent;
+import com.stedeshain.loop.Engine.Utils.Utils;
 
 public abstract class AbstractBody extends DrawableComponent
 {
 	public static final BodyType DEFAULT_TYPE = BodyType.StaticBody;
+	public static final float DEFAULT_ANGLE = 0f;
 	public static final float DEFAULT_DENSITY = 0.5f;
 	public static final float DEFAULT_FRICTION = 0.4f;
 	public static final float DEFAULT_RESTITUTION = 0.6f;
@@ -17,6 +19,7 @@ public abstract class AbstractBody extends DrawableComponent
 	protected Body mBody = null;
 	
 	protected BodyType mBodyTypeDef = DEFAULT_TYPE;
+	protected float mAngleDef = DEFAULT_ANGLE;
 	protected float mDensityDef = DEFAULT_DENSITY;
 	protected float mFrictionDef = DEFAULT_FRICTION;
 	protected float mRestitutionDef = DEFAULT_RESTITUTION;
@@ -45,6 +48,22 @@ public abstract class AbstractBody extends DrawableComponent
 	public void setBodyTypeDef(BodyType type)
 	{
 		mBodyTypeDef = type;
+	}
+	/**
+	 * Must be called before added into a Scene
+	 * @param angleDef : in radians
+	 */
+	public void setAngleDef(float angleDef)
+	{
+		mAngleDef = angleDef;
+	}
+	/**
+	 * Must be called before added into a Scene
+	 * @param degreeDef : in degree
+	 */
+	public void setAngleDegreeDef(float degreeDef)
+	{
+		mAngleDef = Utils.toRadians(degreeDef);
 	}
 	/**
 	 * Must be called before added into a Scene

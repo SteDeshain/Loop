@@ -165,7 +165,7 @@ public class Utils
 		return new TextureRegion(new Texture(pixmap));
 	}
 	
-	public static float getRadians(float degree)
+	public static float toRadians(float degree)
 	{
 		return MathUtils.degreesToRadians * degree;
 	}
