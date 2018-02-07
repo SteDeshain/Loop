@@ -55,6 +55,7 @@ public class Level implements Disposable
 			String region = currentComp.get("region").tojstring();
 			float originXFactor = currentComp.get("originXFactor").tofloat();
 			float originYFactor = currentComp.get("originYFactor").tofloat();
+			float angle = currentComp.get("angle").tofloat();
 			float positionX = currentComp.get("positionX").tofloat();
 			float positionY = currentComp.get("positionY").tofloat();
 			float width = currentComp.get("width").tofloat();
@@ -106,6 +107,7 @@ public class Level implements Disposable
 				body.setBodyTypeDef(BodyType.valueOf(bodyType));
 				body.setOriginFactor(originXFactor, originYFactor);
 				body.setDepth(depth);
+				body.setAngleDef(angle);
 				comp = body;
 			}
 			else if(compType.equals("CircleBody"))
@@ -116,6 +118,7 @@ public class Level implements Disposable
 				body.setBodyTypeDef(BodyType.valueOf(bodyType));
 				body.setOriginFactor(originXFactor, originYFactor);
 				body.setDepth(depth);
+				body.setAngleDef(angle);
 				comp = body;
 			}
 			if(comp != null)

@@ -28,7 +28,7 @@ public class CircleBody extends AbstractBody
 
 		mBodyMargin = margin;
 		setPosition(position);
-		setSize(radius + mBodyMargin * 2, radius + mBodyMargin * 2);
+		setSize((radius + mBodyMargin) * 2, (radius + mBodyMargin) * 2);
 	}
 
 	@Override
