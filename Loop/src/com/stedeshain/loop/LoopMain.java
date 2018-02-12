@@ -4,17 +4,8 @@ import org.luaj.vm2.lib.ResourceFinder;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.stedeshain.loop.Engine.Game;
-import com.stedeshain.loop.Engine.Component.*;
-import com.stedeshain.loop.Engine.Component.Selector.OnSelectListener;
-import com.stedeshain.loop.Engine.Scene.*;
 import com.stedeshain.loop.Engine.Utils.*;
 
 public class LoopMain extends com.stedeshain.loop.Engine.Game
