@@ -110,9 +110,11 @@ public class Level implements Disposable
 			}
 			else if(compType.equals("BoxBody"))
 			{
+				float marginH = currentComp.get("marginH").tofloat();
+				float marginV = currentComp.get("marginV").tofloat();
 				BoxBody body = new BoxBody(new Vector2(positionX, positionY), 
 						new Vector2(width, height), 
-						currentRegion);
+						marginH, marginV, currentRegion);
 				body.setBodyTypeDef(BodyType.valueOf(bodyType));
 				body.setOriginFactor(originXFactor, originYFactor);
 				body.setDepth(depth);
@@ -121,8 +123,9 @@ public class Level implements Disposable
 			}
 			else if(compType.equals("CircleBody"))
 			{
+				float margin = currentComp.get("margin").tofloat();
 				CircleBody body = new CircleBody(new Vector2(positionX, positionY), 
-						width / 2, 
+						width / 2, margin,
 						currentRegion);
 				body.setBodyTypeDef(BodyType.valueOf(bodyType));
 				body.setOriginFactor(originXFactor, originYFactor);
