@@ -4,6 +4,7 @@ import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Disposable;
 import com.stedeshain.loop.Engine.Component.SceneComponent;
 import com.stedeshain.loop.Engine.Component.Body.BoxBody;
+import com.stedeshain.loop.Engine.Component.Body.ChainBody;
 import com.stedeshain.loop.Engine.Component.Body.CircleBody;
 import com.stedeshain.loop.Engine.Scene.Scene;
 import com.sun.istack.internal.NotNull;
@@ -40,6 +42,13 @@ public class Level implements Disposable
 		float viewportWidth = t.get("viewportWidth").tofloat();
 		float viewportHeight = t.get("viewportHeight").tofloat();
 		mScene.setViewport(viewportWidth, viewportHeight);
+		
+		float cameraX = t.get("cameraX").tofloat();
+		float cameraY = t.get("cameraY").tofloat();
+		OrthographicCamera camera = mScene.getCamera();
+		//TODO Scene.setCameraPosition() and Scene.moveCamera() ... ...
+		camera.position.set(cameraX, cameraY, 0f);
+		camera.update();
 		
 		LuaTable comps = (LuaTable)t.get("comps");
 		int compCount = comps.length();
@@ -119,6 +128,30 @@ public class Level implements Disposable
 				body.setOriginFactor(originXFactor, originYFactor);
 				body.setDepth(depth);
 				body.setAngleDef(angle);
+				comp = body;
+			}
+			else if(compType.equals("ChainBody"))
+			{
+				ChainBody body = new ChainBody(new Vector2(positionX, positionY),
+						new Vector2(width, height), 
+						currentRegion);
+				
+				boolean isLoop = currentComp.get("isLoop").toboolean();
+				LuaTable points = (LuaTable)currentComp.get("points");
+				int pointCount = points.length();
+				for(int j = 1; j <= pointCount; j++)
+				{
+					LuaTable currentPoint = (LuaTable)points.get(j);
+					float x = currentPoint.get("x").tofloat();
+					float y = currentPoint.get("y").tofloat();
+					body.addPoint(x, y);
+				}
+				
+				body.setBodyTypeDef(BodyType.valueOf(bodyType));
+				body.setOriginFactor(originXFactor, originYFactor);
+				body.setDepth(depth);
+				body.setAngleDef(angle);
+				body.setLoop(isLoop);
 				comp = body;
 			}
 			if(comp != null)

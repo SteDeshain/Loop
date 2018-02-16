@@ -1,0 +1,89 @@
+package com.stedeshain.loop.Engine.Component.Body;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
+
+public class ChainBody extends AbstractBody
+{
+	private boolean mIsLoop = false;
+	private List<Vector2> mPoints = new ArrayList<Vector2>();
+	
+	public ChainBody(Vector2 position, Vector2 size, TextureRegion textureRegion)
+	{
+		super(position, textureRegion);
+		setPosition(position);
+		setSize(size);
+	}
+
+	@Override
+	public void create()
+	{
+		World world = getWorld();
+
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = mBodyTypeDef;
+		bodyDef.angle = mAngleDef;
+		bodyDef.fixedRotation = mFixedRotationDef;
+		bodyDef.position.set(getPosition());
+		bodyDef.bullet = mBulletDef;
+		mBody = world.createBody(bodyDef);
+		
+		if(mPoints.size() > 0)
+		{
+			ChainShape chainShape = new ChainShape();
+			if(mIsLoop)
+			{
+				chainShape.createLoop(mPoints.toArray(new Vector2[0]));
+			}
+			else
+			{
+				chainShape.createChain(mPoints.toArray(new Vector2[0]));
+			}
+
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.shape = chainShape;
+			fixtureDef.density = mDensityDef == -1 ? AbstractBody.DEFAULT_DENSITY : mDensityDef;
+			fixtureDef.friction = mFrictionDef == -1 ? AbstractBody.DEFAULT_FRICTION : mFrictionDef;
+			fixtureDef.restitution = mRestitutionDef == -1 ? AbstractBody.DEFAULT_RESTITUTION : mRestitutionDef;
+			mBody.createFixture(fixtureDef);
+			
+			chainShape.dispose();
+		}
+	}
+
+	@Override
+	public void updatePhysics()
+	{
+		super.updatePhysics();
+		
+		final Vector2 position = mBody.getPosition();
+		setPosition(position.x - getOrigin().x, position.y - getOrigin().y);
+		setRotation(mBody.getAngle() * MathUtils.radiansToDegrees);
+	}
+	
+	public boolean isLoop()
+	{
+		return mIsLoop;
+	}
+	public void setLoop(boolean isLoop)
+	{
+		mIsLoop = isLoop;
+	}
+	
+	public void addPoint(Vector2 point)
+	{
+		mPoints.add(point);
+	}
+	public void addPoint(float x, float y)
+	{
+		addPoint(new Vector2(x, y));
+	}
+}
