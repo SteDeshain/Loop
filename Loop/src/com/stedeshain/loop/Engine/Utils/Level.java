@@ -56,7 +56,17 @@ public class Level implements Disposable
 		{
 			LuaTable currentComp = (LuaTable)comps.get(i);
 			
-			//String name = currentComp.get("name").tojstring();
+			String name = null;
+			LuaValue lname = currentComp.get("name");
+			if(lname == LuaValue.NIL)
+			{
+				name = currentComp.get("idName").tojstring();
+			}
+			else
+			{
+				name = lname.tojstring();
+			}
+			String tag = currentComp.get("tag").tojstring();
 			String compType = currentComp.get("compType").tojstring();
 			String bodyType = currentComp.get("bodyType").tojstring();
 			int depth = currentComp.get("depth").toint();
@@ -69,6 +79,9 @@ public class Level implements Disposable
 			float positionY = currentComp.get("positionY").tofloat();
 			float width = currentComp.get("width").tofloat();
 			float height = currentComp.get("height").tofloat();
+			float density = currentComp.get("density").tofloat();
+			float restitution = currentComp.get("restitution").tofloat();
+			float friction = currentComp.get("friction").tofloat();
 			
 			TextureRegion currentRegion = null;
 			if(!textureAtlas.equals("null"))
@@ -119,6 +132,11 @@ public class Level implements Disposable
 				body.setOriginFactor(originXFactor, originYFactor);
 				body.setDepth(depth);
 				body.setAngleDef(angle);
+				body.setDensityDef(density);
+				body.setRestitutionDef(restitution);
+				body.setFrictionDef(friction);
+				body.setName(name);
+				body.setTag(tag);
 				comp = body;
 			}
 			else if(compType.equals("CircleBody"))
@@ -131,6 +149,11 @@ public class Level implements Disposable
 				body.setOriginFactor(originXFactor, originYFactor);
 				body.setDepth(depth);
 				body.setAngleDef(angle);
+				body.setDensityDef(density);
+				body.setRestitutionDef(restitution);
+				body.setFrictionDef(friction);
+				body.setName(name);
+				body.setTag(tag);
 				comp = body;
 			}
 			else if(compType.equals("ChainBody"))
@@ -154,7 +177,12 @@ public class Level implements Disposable
 				body.setOriginFactor(originXFactor, originYFactor);
 				body.setDepth(depth);
 				body.setAngleDef(angle);
+				body.setDensityDef(density);
+				body.setRestitutionDef(restitution);
+				body.setFrictionDef(friction);
 				body.setLoop(isLoop);
+				body.setName(name);
+				body.setTag(tag);
 				comp = body;
 			}
 			if(comp != null)

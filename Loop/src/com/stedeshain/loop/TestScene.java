@@ -113,6 +113,10 @@ public class TestScene extends Scene
 		{
 			this.clearCameraPosition();
 		}
+		else if(keycode == Keys.F)
+		{
+			this.getMotherGame().toogleDebugMode();
+		}
 		
 		return false;
 	}

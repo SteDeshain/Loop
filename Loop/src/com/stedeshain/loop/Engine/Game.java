@@ -187,9 +187,13 @@ public abstract class Game implements ApplicationListener
 	}
 	public void setDebugMode(boolean debugMode)
 	{
-		this.mDebugMode = debugMode;
+		mDebugMode = debugMode;
 		if(mDebugMode == true)
 			Gdx.app.setLogLevel(Application.LOG_DEBUG);
+	}
+	public void toogleDebugMode()
+	{
+		setDebugMode(!mDebugMode);
 	}
 
 	public boolean hasDragBug()

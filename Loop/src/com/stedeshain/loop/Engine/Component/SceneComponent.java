@@ -1,12 +1,16 @@
 package com.stedeshain.loop.Engine.Component;
 
 import com.stedeshain.loop.Engine.Scene.Scene;
+import com.sun.istack.internal.NotNull;
 
 public abstract class SceneComponent
 {
 	private Scene mMotherScene;
 	
 	private boolean mEnable = true;
+	
+	private String mName = null;
+	private String mTag = "default";
 	
 	public SceneComponent() {}
 	
@@ -19,6 +23,43 @@ public abstract class SceneComponent
 	
 	public void updateLastFrameValue() {}
 	
+	/**
+	 * 
+	 * @return : "no-name" if this component has no name, otherwise return its name
+	 */
+	public String getName()
+	{
+		return mName == null ? "no-name" : mName;
+	}
+	/**
+	 * Invoker should keep every component having a different name from each other
+	 * @param name
+	 */
+	public void setName(String name)
+	{
+		mName = name;
+	}
+	public boolean matchName(@NotNull String name)
+	{
+		if(mName == null)
+			return false;
+		
+		return mName.equals(name);
+	}
+
+	public String getTag()
+	{
+		return mTag;
+	}
+	public void setTag(@NotNull String tag)
+	{
+		mTag = tag;
+	}
+	public boolean matchTag(@NotNull String tag)
+	{
+		return mTag.equals(tag);
+	}
+
 	public boolean isEnable()
 	{
 		return mEnable;
