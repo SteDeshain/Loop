@@ -93,15 +93,18 @@ public abstract class SceneComponent
 	}
 	
 	/**
-	 * add this component to motherScene's mComponentsToRemoving,
-	 * it will be removed at the end of this frame
+	 * Add this component to motherScene's mComponentsToRemoving list,
+	 * it will be removed at the end of this frame.
+	 * This method won't set motherScene to null, this task is handled by its motherScene.
+	 * When overriding it, make sure to check whether motherScene == null, 
+	 * if so, better just return.
 	 */
 	public void departFromScene()
 	{
 		if(mMotherScene == null)
 			return;
 		
-		//TODO
+		mMotherScene.appendRemovingComponent(this);
 	}
 
 }

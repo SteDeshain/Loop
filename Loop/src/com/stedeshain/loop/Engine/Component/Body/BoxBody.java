@@ -102,6 +102,10 @@ public class BoxBody extends AbstractBody
 		fixtureDef.density = mDensityDef;
 		fixtureDef.friction = mFrictionDef;
 		fixtureDef.restitution = mRestitutionDef;
+		fixtureDef.filter.categoryBits = mCategoryBits;
+		fixtureDef.filter.maskBits = mMaskBits;
+		fixtureDef.filter.groupIndex = mGroupIndex;
+		fixtureDef.isSensor = mIsSensor;
 		mBody.createFixture(fixtureDef);
 		
 		boxShape.dispose();
@@ -112,6 +116,8 @@ public class BoxBody extends AbstractBody
 	{
 		super.updatePhysics();
 		
+		if(mBody == null)
+			return;
 		final Vector2 position = mBody.getPosition();
 		setPosition(position.x - getOrigin().x, position.y - getOrigin().y);
 		setRotation(mBody.getAngle() * MathUtils.radiansToDegrees);

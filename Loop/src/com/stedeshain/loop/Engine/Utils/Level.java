@@ -82,6 +82,10 @@ public class Level implements Disposable
 			float density = currentComp.get("density").tofloat();
 			float restitution = currentComp.get("restitution").tofloat();
 			float friction = currentComp.get("friction").tofloat();
+			short categoryBits = currentComp.get("categoryBits").toshort();
+			short maskBits = currentComp.get("maskBits").toshort();
+			short groupIndex = currentComp.get("groupIndex").toshort();
+			boolean isSensor = currentComp.get("isSensor").toboolean();
 			
 			TextureRegion currentRegion = null;
 			if(!textureAtlas.equals("null"))
@@ -135,6 +139,10 @@ public class Level implements Disposable
 				body.setDensityDef(density);
 				body.setRestitutionDef(restitution);
 				body.setFrictionDef(friction);
+				body.setCategoryBitsDef(categoryBits);
+				body.setMaskBitsDef(maskBits);
+				body.setGroupIndex(groupIndex);
+				body.setIsSensorDef(isSensor);
 				body.setName(name);
 				body.setTag(tag);
 				comp = body;
@@ -152,6 +160,10 @@ public class Level implements Disposable
 				body.setDensityDef(density);
 				body.setRestitutionDef(restitution);
 				body.setFrictionDef(friction);
+				body.setCategoryBitsDef(categoryBits);
+				body.setMaskBitsDef(maskBits);
+				body.setGroupIndex(groupIndex);
+				body.setIsSensorDef(isSensor);
 				body.setName(name);
 				body.setTag(tag);
 				comp = body;
@@ -180,6 +192,10 @@ public class Level implements Disposable
 				body.setDensityDef(density);
 				body.setRestitutionDef(restitution);
 				body.setFrictionDef(friction);
+				body.setCategoryBitsDef(categoryBits);
+				body.setMaskBitsDef(maskBits);
+				body.setGroupIndex(groupIndex);
+				body.setIsSensorDef(isSensor);
 				body.setLoop(isLoop);
 				body.setName(name);
 				body.setTag(tag);

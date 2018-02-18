@@ -50,9 +50,13 @@ public class ChainBody extends AbstractBody
 
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.shape = chainShape;
-			fixtureDef.density = mDensityDef == -1 ? AbstractBody.DEFAULT_DENSITY : mDensityDef;
-			fixtureDef.friction = mFrictionDef == -1 ? AbstractBody.DEFAULT_FRICTION : mFrictionDef;
-			fixtureDef.restitution = mRestitutionDef == -1 ? AbstractBody.DEFAULT_RESTITUTION : mRestitutionDef;
+			fixtureDef.density = mDensityDef;
+			fixtureDef.friction = mFrictionDef;
+			fixtureDef.restitution = mRestitutionDef;
+			fixtureDef.filter.categoryBits = mCategoryBits;
+			fixtureDef.filter.maskBits = mMaskBits;
+			fixtureDef.filter.groupIndex = mGroupIndex;
+			fixtureDef.isSensor = mIsSensor;
 			mBody.createFixture(fixtureDef);
 			
 			chainShape.dispose();
@@ -63,7 +67,9 @@ public class ChainBody extends AbstractBody
 	public void updatePhysics()
 	{
 		super.updatePhysics();
-		
+
+		if(mBody == null)
+			return;
 		final Vector2 position = mBody.getPosition();
 		setPosition(position.x - getOrigin().x, position.y - getOrigin().y);
 		setRotation(mBody.getAngle() * MathUtils.radiansToDegrees);

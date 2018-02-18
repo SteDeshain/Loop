@@ -18,6 +18,8 @@ public class TestScene extends Scene
 	Label fpsLabel;
 	Level level;
 	
+	BoxBody player;
+	
 	public TestScene(Game motherGame, Vector2 viewport)
 	{
 		super(motherGame, viewport);
@@ -39,7 +41,7 @@ public class TestScene extends Scene
 		this.addComponent(fpsLabel);
 		
 		TextureRegion grayRegion = Utils.getColorTextureRegion(Color.GRAY, 1, 1);
-		BoxBody player = new BoxBody(new Vector2(0, 0), new Vector2(0.5f, 1f), grayRegion)
+		player = new BoxBody(new Vector2(0, 0), new Vector2(0.5f, 1f), grayRegion)
 		{
 			@Override
 			public void update(float deltaTime)
@@ -116,6 +118,15 @@ public class TestScene extends Scene
 		else if(keycode == Keys.F)
 		{
 			this.getMotherGame().toogleDebugMode();
+		}
+		else if(keycode == Keys.G)
+		{
+			if(this.getComponent("BoxBody_1") != null)
+				this.getComponent("BoxBody_1").departFromScene();
+			if(this.getComponent("ChainBody_30") != null)
+				this.getComponent("ChainBody_30").departFromScene();
+			if(this.getComponent("CircleBody_39") != null)
+				this.getComponent("CircleBody_39").departFromScene();
 		}
 		
 		return false;

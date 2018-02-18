@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.stedeshain.loop.Engine.Component.DrawableComponent;
+import com.stedeshain.loop.Engine.Scene.Scene;
 import com.stedeshain.loop.Engine.Utils.Utils;
 
 public abstract class AbstractBody extends DrawableComponent
@@ -25,6 +26,10 @@ public abstract class AbstractBody extends DrawableComponent
 	protected float mRestitutionDef = DEFAULT_RESTITUTION;
 	protected boolean mFixedRotationDef = false;
 	protected boolean mBulletDef = false;
+	protected short mCategoryBits = 0x0001;
+	protected short mMaskBits = -1;
+	protected short mGroupIndex = 0;
+	protected boolean mIsSensor = false;
 
 	public AbstractBody(Vector2 position, TextureRegion textureRegion)
 	{
@@ -38,7 +43,11 @@ public abstract class AbstractBody extends DrawableComponent
 	
 	protected World getWorld()
 	{
-		return getMotherScene().getPhysicsWorld();
+		Scene motherScene = getMotherScene();
+		if(motherScene == null)
+			return null;
+		else
+			return motherScene.getPhysicsWorld();
 	}
 	
 	/**
@@ -106,9 +115,48 @@ public abstract class AbstractBody extends DrawableComponent
 		mBulletDef = bulletDef;
 	}
 	
+	/**
+	 * Must be called before added into a Scene
+	 * @param categoryBits
+	 */
+	public void setCategoryBitsDef(short categoryBits)
+	{
+		mCategoryBits = categoryBits;
+	}
+	
+	/**
+	 * Must be called before added into a Scene
+	 * @param maskBits
+	 */
+	public void setMaskBitsDef(short maskBits)
+	{
+		mMaskBits = maskBits;
+	}
+	
+	/**
+	 * Must be called before added into a Scene
+	 * @param groupIndex
+	 */
+	public void setGroupIndex(short groupIndex)
+	{
+		mGroupIndex = groupIndex;
+	}
+	
+	/**
+	 * Must be called before added into a Scene
+	 * @param isSensor
+	 */
+	public void setIsSensorDef(boolean isSensor)
+	{
+		mIsSensor = isSensor;
+	}
+	
 	@Override
 	public void departFromScene()
 	{
+		if(getMotherScene() == null)
+			return;
+		
 		super.departFromScene();
 
 		getWorld().destroyBody(mBody);

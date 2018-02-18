@@ -189,7 +189,8 @@ public class Scene extends InputMultiplexer implements Disposable
 	/**
 	 * add the component at the specific index of mComponents
 	 */
-	//TODO remove it !!!
+	//TODO remove it !!! Yes ! need to remove it !!!
+	/**/
 	public void insertComponent(@NotNull SceneComponent component, int index)
 	{
 		if(mComponents.contains(component, true))
@@ -203,12 +204,13 @@ public class Scene extends InputMultiplexer implements Disposable
 		mComponents.insert(index, component);
 		//Separate UIComponent and DrawableComponent
 		if(component instanceof UIComponent)
-			mUIComponents.insert(index, (UIComponent)component);
+			mUIComponents.insert(index, (UIComponent)component);	//wrong index
 		else if(component instanceof DrawableComponent)
-			mDrawableComponents.insert(index, (DrawableComponent)component);
+			mDrawableComponents.insert(index, (DrawableComponent)component);	//wrong index
 		component.setMotherScene(this);
 		component.create();
 	}
+	/**/
 	
 	/**
 	 * Can not be called in main loop, like update() or draw()
@@ -242,6 +244,39 @@ public class Scene extends InputMultiplexer implements Disposable
 	{
 		return mComponents.contains(component, true);
 	}
+	
+	/**
+	 * find component by name
+	 * @param name
+	 * @return first component matching the specified name
+	 */
+	public SceneComponent getComponent(@NotNull String name)
+	{
+		for(int i = 0; i < mComponents.size; i++)
+		{
+			SceneComponent currentComp = mComponents.get(i);
+			if(currentComp.matchName(name))
+				return currentComp;
+		}
+		return null;
+	}
+	private Array<SceneComponent> tempCompArray = new Array<SceneComponent>();
+	/**
+	 * find components by tag
+	 * @param tag
+	 * @return This method will return the same instance of an Array every time
+	 */
+	public Array<SceneComponent> getComponents(@NotNull String tag)
+	{
+		tempCompArray.clear();
+		for(int i = 0; i < mComponents.size; i++)
+		{
+			SceneComponent currentComp = mComponents.get(i);
+			if(currentComp.matchTag(tag))
+				tempCompArray.add(currentComp);
+		}
+		return tempCompArray;
+	}
 
 	public void appendRemovingComponent(SceneComponent component)
 	{
@@ -254,7 +289,7 @@ public class Scene extends InputMultiplexer implements Disposable
 	public void sortDrawables()
 	{
 		//TODO may sort in another thread. After sorting finished, need to post to render thread.
-		//Cause libGDX has a good implementation of postRunnable(), like this:
+		//Cause libGDX has a good implementation of postRunnable(), saying this:
 		//"This will run the code in the Runnable in the rendering thread in the next frame, 
 		//before ApplicationListener.render() is called."
 		mDrawableComponents.sort(mDrawableComparator);
