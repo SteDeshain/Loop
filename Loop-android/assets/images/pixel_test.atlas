@@ -1,0 +1,20 @@
+
+pixel_test.png
+size: 512,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+grass
+  rotate: false
+  xy: 2, 141
+  size: 397, 65
+  orig: 397, 65
+  offset: 0, 0
+  index: -1
+tree
+  rotate: false
+  xy: 2, 2
+  size: 116, 137
+  orig: 116, 137
+  offset: 0, 0
+  index: -1
