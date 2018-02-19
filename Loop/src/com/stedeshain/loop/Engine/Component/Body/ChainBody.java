@@ -11,7 +11,12 @@ import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class ChainBody extends AbstractBody
+/**
+ * Cannot inherit this class because: see {@link Role#registerGroundDetection}
+ * @author Administrator
+ *
+ */
+public final class ChainBody extends AbstractBody
 {
 	private boolean mIsLoop = false;
 	private List<Vector2> mPoints = new ArrayList<Vector2>();
@@ -57,10 +62,14 @@ public class ChainBody extends AbstractBody
 			fixtureDef.filter.maskBits = mMaskBits;
 			fixtureDef.filter.groupIndex = mGroupIndex;
 			fixtureDef.isSensor = mIsSensor;
-			mBody.createFixture(fixtureDef);
+			mMainFixture = mBody.createFixture(fixtureDef);
 			
 			chainShape.dispose();
 		}
+		
+		registerGeneralContactEvent();
+		
+		registerUserData();
 	}
 
 	@Override

@@ -21,13 +21,13 @@ public class LoopMain extends com.stedeshain.loop.Engine.Game
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
 		this.setUIViewport(new Vector2(800, 480));
-		this.setDebugMode(true);
+		//this.setDebugMode(true);
 		this.setHasDragBug(true);
 
 		super.create();
 		
-		this.getGlobalAssets().loadTextureAtlas(Utils.getImageAssetPath("test.atlas"));
-		this.getGlobalAssets().finishLoading();
+		//this.getGlobalAssets().loadTextureAtlas(Utils.getImageAssetPath("test.atlas"));
+		//this.getGlobalAssets().finishLoading();
 		
 		TestScene testScene = new TestScene(this, new Vector2(5, 10));
 		//testScene.setBackColor(Color.MAGENTA);

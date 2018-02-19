@@ -73,7 +73,7 @@ public class BoxBody extends AbstractBody
 		size.add(mHorizontalBodyMargin * 2, mVerticalBodyMargin * 2);
 		setSize(size);
 	}
-	
+
 	@Override
 	public void create()
 	{
@@ -86,7 +86,7 @@ public class BoxBody extends AbstractBody
 		bodyDef.position.set(getPosition());
 		bodyDef.bullet = mBulletDef;
 		mBody = world.createBody(bodyDef);
-		
+
 		PolygonShape boxShape = new PolygonShape();
 		final Vector2 size = getSize();
 		Vector2 origin = getOrigin();
@@ -106,9 +106,13 @@ public class BoxBody extends AbstractBody
 		fixtureDef.filter.maskBits = mMaskBits;
 		fixtureDef.filter.groupIndex = mGroupIndex;
 		fixtureDef.isSensor = mIsSensor;
-		mBody.createFixture(fixtureDef);
+		mMainFixture = mBody.createFixture(fixtureDef);
 		
 		boxShape.dispose();
+		
+		registerGeneralContactEvent();
+		
+		registerUserData();
 	}
 
 	@Override

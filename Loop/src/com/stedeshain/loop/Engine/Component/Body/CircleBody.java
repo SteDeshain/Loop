@@ -60,9 +60,13 @@ public class CircleBody extends AbstractBody
 		fixtureDef.filter.maskBits = mMaskBits;
 		fixtureDef.filter.groupIndex = mGroupIndex;
 		fixtureDef.isSensor = mIsSensor;
-		mBody.createFixture(fixtureDef);
+		mMainFixture = mBody.createFixture(fixtureDef);
 		
 		circleShape.dispose();
+		
+		registerGeneralContactEvent();
+		
+		registerUserData();
 	}
 
 	public float getBodyMargin()

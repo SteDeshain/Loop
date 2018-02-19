@@ -46,6 +46,8 @@ public class Constants
 	public static final String LEVELS_PATH = "scripts/levels/";
 	public static final String SOUNDS_PATH = "sounds/";
 	
+	public static final String TERRAIN_TAG = "terrain";
+	
 	//debug use
 	public static final Color TOUCH_CROSS_LINE_COLOR = Color.BLUE;
 	public static final Color TOUCH_INFO_TEXT_COLOR = Color.GREEN;

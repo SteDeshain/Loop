@@ -19,6 +19,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -31,6 +35,7 @@ import com.stedeshain.loop.Engine.Component.InputEvent.InputType;
 import com.stedeshain.loop.Engine.Component.SceneComponent;
 import com.stedeshain.loop.Engine.Component.Selector;
 import com.stedeshain.loop.Engine.Component.UIComponent;
+import com.stedeshain.loop.Engine.Component.Body.AbstractBody;
 import com.stedeshain.loop.Engine.Utils.AssetsHelper;
 import com.stedeshain.loop.Engine.Utils.Constants;
 import com.stedeshain.loop.Engine.Utils.IntVector2;
@@ -48,6 +53,7 @@ public class Scene extends InputMultiplexer implements Disposable
 	
 	//physics
 	private World mWorld = null;
+	private Array<ContactListener> mContactListeners = new Array<ContactListener>();
 	private Box2DDebugRenderer mPhysicsDebugRenderer = null;
 	private ShapeRenderer mShapeRenderer = null;	//For now, it's used to draw body's mess center
 	
@@ -234,7 +240,13 @@ public class Scene extends InputMultiplexer implements Disposable
 			if(component instanceof UIComponent)
 				mUIComponents.removeValue((UIComponent)component, true);
 			else if(component instanceof DrawableComponent)
+			{
 				mDrawableComponents.removeValue((DrawableComponent)component, true);
+				if(component instanceof AbstractBody)
+				{
+					((AbstractBody)component).disposePhysics();
+				}
+			}
 
 			component.setMotherScene(null);
 		}
@@ -282,6 +294,11 @@ public class Scene extends InputMultiplexer implements Disposable
 	{
 		mComponentsToRemoving.add(component);
 	}
+	
+	public void addContactListener(@NotNull ContactListener listener)
+	{
+		mContactListeners.add(listener);
+	}
 
 	/**
 	 * Can not be called in update() or draw()
@@ -325,6 +342,46 @@ public class Scene extends InputMultiplexer implements Disposable
 			
 			mShapeRenderer = new ShapeRenderer();
 			mShapeRenderer.setAutoShapeType(true);
+			
+			//register contact listener
+			mWorld.setContactListener(new ContactListener()
+			{
+				@Override
+				public void beginContact(Contact contact)
+				{
+					for(int i = 0; i < mContactListeners.size; i++)
+					{
+						mContactListeners.get(i).beginContact(contact);
+					}
+				}
+
+				@Override
+				public void endContact(Contact contact)
+				{
+					for(int i = 0; i < mContactListeners.size; i++)
+					{
+						mContactListeners.get(i).endContact(contact);
+					}
+				}
+
+				@Override
+				public void preSolve(Contact contact, Manifold oldManifold)
+				{
+					for(int i = 0; i < mContactListeners.size; i++)
+					{
+						mContactListeners.get(i).preSolve(contact, oldManifold);
+					}
+				}
+
+				@Override
+				public void postSolve(Contact contact, ContactImpulse impulse)
+				{
+					for(int i = 0; i < mContactListeners.size; i++)
+					{
+						mContactListeners.get(i).postSolve(contact, impulse);
+					}
+				}
+			});
 		}
 	}
 	
@@ -332,6 +389,10 @@ public class Scene extends InputMultiplexer implements Disposable
 	{
 		mCamera.position.set(x, y, 0f);
 		mCamera.update();
+	}
+	public void setCameraPosition(Vector2 position)
+	{
+		setCameraPosition(position.x, position.y);
 	}
 	public void addCameraPosition(float dx, float dy)
 	{
