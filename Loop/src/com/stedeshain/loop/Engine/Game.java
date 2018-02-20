@@ -59,6 +59,8 @@ public abstract class Game implements ApplicationListener
 	 */
 	private Vector2 mUIViewport;
 	
+	private boolean mIsTransiting = false;
+	private float mTransitionProgress = 0f;
 	private float mTransitionElapsed = 0f;
 	private boolean mFadeIn = false;
 	private boolean mFadeOut = false;
@@ -145,11 +147,16 @@ public abstract class Game implements ApplicationListener
 	}
 
 	/**
-	 * That's the method that a user should call to set a new Scene
+	 * That's the method that a user should call to set a new Scene.
+	 * If there is a Scene that hasn't finished its showing(like fading out or fading in), this method will do nothing
 	 * @param scene
 	 */
 	public void beginScene(Scene scene)
 	{
+		if(mIsTransiting)	//Cannot begin a Scene when previous Scene's showing isn't finished
+			return;
+		
+		mIsTransiting = true;
 		//start to load assets of the next scene, if it has any
 		if(scene.hasAssets() && !scene.isAssetsLoaded())	//start to load
 		{
@@ -227,6 +234,15 @@ public abstract class Game implements ApplicationListener
 		mUIViewport = UIViewport;
 	}
 	
+	public boolean isTransiting()
+	{
+		return mIsTransiting;
+	}
+	public float getTransitionProgress()
+	{
+		return mTransitionProgress;
+	}
+	
 	@Override
 	public void create()
 	{
@@ -287,13 +303,15 @@ public abstract class Game implements ApplicationListener
 			if(mTransitionElapsed > fadeOutDuration)
 				mTransitionElapsed = fadeOutDuration;
 
-			mBatchColor.a = 1 - mTransitionElapsed / fadeOutDuration;
+			mTransitionProgress = 1 - mTransitionElapsed / fadeOutDuration;
+			mBatchColor.a = mTransitionProgress;
 			mGameBatch.setColor(mBatchColor);
 
 			if(mTransitionElapsed >= fadeOutDuration)
 			{
 				//step into a waiting black screen, to load next scene's assets
 				mIsLoadingAssets = true;
+				mTransitionProgress = 0f;
 				mFadeOut = false;
 				mTransitionElapsed = 0f;
 			}
@@ -329,7 +347,8 @@ public abstract class Game implements ApplicationListener
 		{
 			mTransitionElapsed += deltaTime;
 
-			mBatchColor.a = mTransitionElapsed / fadeInDuration;
+			mTransitionProgress = mTransitionElapsed / fadeInDuration;
+			mBatchColor.a = mTransitionProgress;
 			mGameBatch.setColor(mBatchColor);
 
 			if(mTransitionElapsed >= fadeInDuration)
@@ -337,6 +356,8 @@ public abstract class Game implements ApplicationListener
 				mFadeOut = false;
 				mFadeIn = false;
 				mTransitionElapsed = 0f;
+				mIsTransiting = false;
+				mTransitionProgress = 1f;
 				mBatchColor.a = 1;
 				mGameBatch.setColor(mBatchColor);
 			}

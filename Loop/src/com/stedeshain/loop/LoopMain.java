@@ -4,9 +4,10 @@ import org.luaj.vm2.lib.ResourceFinder;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.stedeshain.loop.Engine.Game;
-import com.stedeshain.loop.Engine.Utils.*;
+import com.stedeshain.loop.Engine.Utils.Utils;
 
 public class LoopMain extends com.stedeshain.loop.Engine.Game
 {
@@ -26,15 +27,18 @@ public class LoopMain extends com.stedeshain.loop.Engine.Game
 
 		super.create();
 		
-		//this.getGlobalAssets().loadTextureAtlas(Utils.getImageAssetPath("test.atlas"));
-		//this.getGlobalAssets().finishLoading();
+		TitleScene title = new TitleScene(this);
+		title.setFadeInDuration(1f);
+		title.setFadeOutDuration(1f);
+		title.addAssetToLoading(Utils.getMusicAssetPath("Canon in D @author Brian Crain.mp3"), Music.class);
+		//title.addAssetToLoading(Utils.getMusicAssetPath("µ­¡©ÅÝ¡© @author Foxtail-Grass Studio.mp3"), Music.class);
+		title.addAssetToLoading(Utils.getImageAssetPath("loop.atlas"), TextureAtlas.class);
+		title.setOneTimeUsed(true);
 		
-		TestScene testScene = new TestScene(this, new Vector2(5, 10));
-		//testScene.setBackColor(Color.MAGENTA);
-		//first scene doesn't load any assets
-		//testScene.addAssetToLoading(Utils.getImageAssetPath("test.atlas"), TextureAtlas.class);
-		
-		Game.sSetFirstScene(testScene);
+		LaunchScene launchScene = new LaunchScene(this, title);
+//		launchScene.setMinWaitingTime(1);
+		launchScene.setOneTimeUsed(true);
+		setFirstScene(launchScene);
 	}
 
 	@Override

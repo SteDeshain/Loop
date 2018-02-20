@@ -33,6 +33,10 @@ public class Utils
 	{
 		return Constants.SOUNDS_PATH + fileName;
 	}
+	public static String getMusicAssetPath(String fileName)
+	{
+		return Constants.MUSIC_PATH + fileName;
+	}
 	public static String getScriptsPath(String fileName)
 	{
 		return Constants.SCRIPTS_PATH + fileName;

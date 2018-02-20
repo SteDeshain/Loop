@@ -17,6 +17,10 @@ public class AssetsHelper extends AssetManager
 	{
 		return get(fileName, TextureAtlas.class);
 	}
+	public Music getMusic(String fileName)
+	{
+		return get(fileName, Music.class);
+	}
 	
 	public void loadTexture(String fileName)
 	{
