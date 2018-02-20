@@ -1,0 +1,76 @@
+
+tiles.png
+size: 256,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+black
+  rotate: false
+  xy: 68, 96
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+brown
+  rotate: false
+  xy: 2, 30
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+darkBrown
+  rotate: false
+  xy: 2, 96
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+lightBrown
+  rotate: false
+  xy: 68, 30
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+red
+  rotate: false
+  xy: 134, 96
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+skyBlue
+  rotate: false
+  xy: 2, 162
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+tiles
+  rotate: false
+  xy: 2, 2
+  size: 46, 26
+  orig: 46, 26
+  offset: 0, 0
+  index: -1
+transparent
+  rotate: false
+  xy: 134, 30
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+white
+  rotate: false
+  xy: 68, 162
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+yellow
+  rotate: false
+  xy: 134, 162
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

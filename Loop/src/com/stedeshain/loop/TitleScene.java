@@ -10,7 +10,7 @@ import com.stedeshain.loop.Engine.Utils.Utils;
 
 public class TitleScene extends UIScene
 {
-	TestScene testScene;
+	TestPixelScene testPixelScene;
 	Label hint;
 	Music bgm;
 	
@@ -29,7 +29,7 @@ public class TitleScene extends UIScene
 		hint.setViewportAnchor(0.5f, 0.3f);
 		addComponent(hint);
 		
-//		bgm = this.getAssetsHelper().getMusic(Utils.getMusicAssetPath("Canon in D @author Brian Crain.mp3"));
+//		bgm = this.getAssetsHelper().getMusic(Utils.getMusicAssetPath("canon_in_d@authorbrian_crain.mp3"));
 //		bgm.play();
 		
 		UIComponent title = new UIComponent(this.getAssetsHelper().getTextureAtlas(Utils.getImageAssetPath("loop.atlas")).findRegion("loop"));
@@ -44,9 +44,9 @@ public class TitleScene extends UIScene
 		if(getMotherGame().isTransiting())
 			return;
 		
-		testScene = new TestScene(getMotherGame(), new Vector2(5, 10));
-		testScene.setFadeInDuration(0.5f);
-		getMotherGame().beginScene(testScene);
+		testPixelScene = new TestPixelScene(getMotherGame());
+		testPixelScene.setFadeInDuration(0.5f);
+		getMotherGame().beginScene(testPixelScene);
 	}
 	
 	@Override

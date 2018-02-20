@@ -23,6 +23,9 @@ public class Level implements Disposable
 	private String mLevelName;
 	private AssetsHelper assets = new AssetsHelper();
 	
+	private int mOriginScreenWidth = 0;
+	private int mOriginScreenHeight = 0;
+	
 	public Level(@NotNull Scene scene, @NotNull String levelName)
 	{
 		mScene = scene;
@@ -49,6 +52,10 @@ public class Level implements Disposable
 		//TODO Scene.setCameraPosition() and Scene.moveCamera() ... ...
 		camera.position.set(cameraX, cameraY, 0f);
 		camera.update();
+		
+		LuaTable canvasRaw = (LuaTable)t.get("raw");
+		mOriginScreenWidth = canvasRaw.get("screenWidth").toint();
+		mOriginScreenHeight = canvasRaw.get("screenHeight").toint();
 		
 		LuaTable comps = (LuaTable)t.get("comps");
 		int compCount = comps.length();
@@ -214,6 +221,16 @@ public class Level implements Disposable
 	public String getLevelName()
 	{
 		return mLevelName;
+	}
+
+	public int getOriginScreenWidth()
+	{
+		return mOriginScreenWidth;
+	}
+
+	public int getOriginScreenHeight()
+	{
+		return mOriginScreenHeight;
 	}
 
 	@Override

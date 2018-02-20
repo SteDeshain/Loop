@@ -752,6 +752,15 @@ public class Scene extends InputMultiplexer implements Disposable
 	{
 		mOneTimeUsed = oneTimeUsed;
 	}
+	
+	public void setViewportFixedType(ViewportFixedType type)
+	{
+		mViewportType = type;
+	}
+	public ViewportFixedType getViewportFixedType()
+	{
+		return mViewportType;
+	}
 
 	public void setUpdateListener(OnUpdateListener updateListener)
 	{

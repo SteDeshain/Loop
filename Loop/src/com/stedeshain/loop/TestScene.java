@@ -42,7 +42,9 @@ public class TestScene extends Scene
 
 		this.addPhysicsModule();
 		
-		level = new Level(this, "test");
+		this.setBackColor(Color.WHITE);
+		
+		level = new Level(this, "pixel");
 		level.init();
 		
 		fpsLabel = new Label("FPS:");
@@ -115,6 +117,7 @@ public class TestScene extends Scene
 		{
 			player.getBody().applyForceToCenter(0, 0, true);
 		}
+		this.getCamera().zoom = 0.5f;
 	}
 	
 	/**/
@@ -125,7 +128,7 @@ public class TestScene extends Scene
 		
 		fpsLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
 		
-		this.setCameraPosition(player.getPosition());
+		//this.setCameraPosition(player.getPosition());
 	}
 	/**/
 	
@@ -166,7 +169,7 @@ public class TestScene extends Scene
 		}
 		else if(keycode == Keys.G)
 		{
-			this.sortDrawables();
+			Gdx.graphics.setWindowedMode(100, 100);
 		}
 		
 		return false;
