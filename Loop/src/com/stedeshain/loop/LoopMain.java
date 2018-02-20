@@ -28,9 +28,9 @@ public class LoopMain extends com.stedeshain.loop.Engine.Game
 		super.create();
 		
 		TitleScene title = new TitleScene(this);
-		title.setFadeInDuration(1f);
-		title.setFadeOutDuration(1f);
-		title.addAssetToLoading(Utils.getMusicAssetPath("canon_in_d@authorbrian_crain.mp3"), Music.class);
+		//title.setFadeInDuration(1f);
+		//title.setFadeOutDuration(1f);
+		//title.addAssetToLoading(Utils.getMusicAssetPath("canon_in_d@authorbrian_crain.mp3"), Music.class);
 		//title.addAssetToLoading(Utils.getMusicAssetPath("µ­¡©ÅÝ¡© @author Foxtail-Grass Studio.mp3"), Music.class);
 		title.addAssetToLoading(Utils.getImageAssetPath("loop.atlas"), TextureAtlas.class);
 		title.setOneTimeUsed(true);

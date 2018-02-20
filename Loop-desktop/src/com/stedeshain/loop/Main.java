@@ -14,7 +14,8 @@ public class Main
 		cfg.width = 800;
 		cfg.height = 480;
 		cfg.allowSoftwareMode = true;
-		//cfg.resizable = false;
+		cfg.resizable = false;
+		//cfg.fullscreen = true;
 		cfg.x = -1;
 		cfg.y = -1;
 		cfg.vSyncEnabled = true;
