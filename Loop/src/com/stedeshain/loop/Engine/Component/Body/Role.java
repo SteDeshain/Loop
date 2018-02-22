@@ -34,6 +34,9 @@ public class Role extends BoxBody
 	public void create()
 	{
 		super.create();
+		
+		if(getWorld() == null)
+			return;
 
 		PolygonShape detectorShape = new PolygonShape();
 		Vector2 size = getSize();
