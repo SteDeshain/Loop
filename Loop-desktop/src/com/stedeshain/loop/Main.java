@@ -9,13 +9,11 @@ public class Main
 	{
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Loop";
-		cfg.width = 1350;
-		cfg.height = 700;
 		cfg.width = 800;
 		cfg.height = 480;
 		cfg.allowSoftwareMode = true;
 		cfg.resizable = false;
-		//cfg.fullscreen = true;
+		cfg.fullscreen = false;
 		cfg.x = -1;
 		cfg.y = -1;
 		cfg.vSyncEnabled = true;

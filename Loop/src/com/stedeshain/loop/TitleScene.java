@@ -37,6 +37,8 @@ public class TitleScene extends UIScene
 		title.setSourceAnchor(0.5f, 0.5f);
 		title.setViewportAnchor(0.5f, 0.7f);
 		addComponent(title);
+		
+		//Utils.debug("aaaa");
 	}
 	
 	private void startGame()

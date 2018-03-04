@@ -78,6 +78,8 @@ public class BoxBody extends AbstractBody
 	public void create()
 	{
 		World world = getWorld();
+		if(world == null)
+			return;
 		
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = mBodyTypeDef;

@@ -21,26 +21,14 @@ import com.stedeshain.loop.Engine.Scene.Scene;
 import com.stedeshain.loop.Engine.Utils.AssetsHelper;
 import com.stedeshain.loop.Engine.Utils.Constants;
 import com.stedeshain.loop.Engine.Utils.Utils;
-import com.sun.istack.internal.NotNull;
 
 public abstract class Game implements ApplicationListener
 {
 	//TODO maybe remove these static methods ?
 	private static Game mGameInstance = null;
-	
 	public static Game getInstance()
 	{
 		return Game.mGameInstance;
-	}
-	public static void sBeginScene(@NotNull Scene scene)
-	{
-		if(Game.mGameInstance != null)
-			Game.mGameInstance.beginScene(scene);
-	}
-	public static void sSetFirstScene(@NotNull Scene scene)
-	{
-		if(Game.mGameInstance != null)
-			Game.mGameInstance.setFirstScene(scene);
 	}
 	
 	private ResourceFinder mAndroidLuaScriptFinder;
@@ -241,6 +229,34 @@ public abstract class Game implements ApplicationListener
 	public float getTransitionProgress()
 	{
 		return mTransitionProgress;
+	}
+
+	public boolean isFullScreen()
+	{
+		return Gdx.graphics.isFullscreen();
+	}
+	private int originWindowWidth = 0;
+	private int originWindowHeight = 0;
+	/**
+	 * It's not recommended to change window size or reset full screen while using PixelScene,
+	 * because it will cause pixel jittering
+	 * @param fullScreen
+	 */
+	public void setFullScreen(boolean fullScreen)
+	{
+		if(Gdx.app.getType() != ApplicationType.Desktop)
+			return;
+	
+		if(fullScreen)
+		{
+			originWindowWidth = Gdx.graphics.getWidth();
+			originWindowHeight = Gdx.graphics.getHeight();
+			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+		}
+		else
+		{
+			Gdx.graphics.setWindowedMode(originWindowWidth, originWindowHeight);
+		}
 	}
 	
 	@Override
