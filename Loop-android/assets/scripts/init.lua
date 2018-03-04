@@ -37,5 +37,3 @@ end
 
 globalAssets = {}
 Gdx = luajava.bindClass(className.Gdx)
-=======
->>>>>>> origin/master
