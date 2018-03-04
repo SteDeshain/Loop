@@ -50,6 +50,3 @@ end
 
 globalAssets = {}
 Gdx = luajava.bindClass(className.Gdx)
-
---require "scenes/launchScene"
---game.setFirstScene(launchScene)
