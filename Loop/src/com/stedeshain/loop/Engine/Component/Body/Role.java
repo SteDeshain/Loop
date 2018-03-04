@@ -81,7 +81,9 @@ public class Role extends BoxBody
 
 				if(anotherBody.matchTag(Constants.TERRAIN_TAG))
 				{
-					mGrounded = true;
+					//TODO
+					//if(mBody.getLinearVelocity().epsilonEquals(mBody.getLinearVelocity().x, 0))
+						mGrounded = true;
 					mUnderneathFixtures.add(anotherFixture);
 				}
 			}

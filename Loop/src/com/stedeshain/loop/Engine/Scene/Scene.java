@@ -89,6 +89,9 @@ public class Scene extends InputMultiplexer implements Disposable
 	private SpriteBatch mBatch;
 	private Color mBackColor = new Color(Constants.SCREEN_FLUSH_COLOR);
 	
+	private Vector2 mCameraHorizontalRestriction;
+	private Vector2 mCameraVerticalRestriction;
+	
 	/**
 	 * Used to fix the drag bug on some platform.
 	 */
@@ -404,6 +407,46 @@ public class Scene extends InputMultiplexer implements Disposable
 		mCamera.position.set(0f, 0f, 0f);
 		mCamera.update();
 	}
+	
+	/**
+	 * Clear camera horizontal restriction
+	 */
+	public void restrictCameraHorizontal()
+	{
+		mCameraHorizontalRestriction = null;
+	}
+	/**
+	 * set camera horizontal restriction
+	 * @param min
+	 * @param max
+	 */
+	public void restrictCameraHorizontal(float min, float max)
+	{
+		if(mCameraHorizontalRestriction == null)
+			mCameraHorizontalRestriction = new Vector2();
+		
+		mCameraHorizontalRestriction.set(min, max);
+	}
+	/**
+	 * Clear camera vertical restriction
+	 */
+	public void restrictCameraVertical()
+	{
+		mCameraVerticalRestriction = null;
+	}
+	/**
+	 * set camera vertical restriction
+	 * @param min
+	 * @param max
+	 */
+	public void restrictCameraVertical(float min, float max)
+	{
+		if(mCameraVerticalRestriction == null)
+			mCameraVerticalRestriction = new Vector2();
+		
+		mCameraVerticalRestriction.set(min, max);
+	}
+	
 	//TODO set and get method of mDefaultZoomDelta
 	private float mDefaultZoomDelta = 0.1f;
 	//TODO set and get method of mMaxZoom and mMinZoom
@@ -456,6 +499,24 @@ public class Scene extends InputMultiplexer implements Disposable
 		
 		if(mUpdateListener != null)
 			mUpdateListener.onUpdate(this, deltaTime);
+	}
+	
+	/**
+	 * invoked by main loop to restrict camera position before rendering on every frame
+	 */
+	public final void restrictCamera()
+	{
+		if(mCameraHorizontalRestriction != null)
+		{
+			mCamera.position.x = MathUtils.clamp(mCamera.position.x, 
+					mCameraHorizontalRestriction.x, mCameraHorizontalRestriction.y);
+		}
+		if(mCameraVerticalRestriction != null)
+		{
+			mCamera.position.y = MathUtils.clamp(mCamera.position.y, 
+					mCameraVerticalRestriction.x, mCameraVerticalRestriction.y);
+		}
+		mCamera.update();
 	}
 	
 	public void draw()

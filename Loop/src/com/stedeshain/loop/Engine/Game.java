@@ -298,6 +298,7 @@ public abstract class Game implements ApplicationListener
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		//logic update
 		mCurrentScene.update(deltaTime);
+		mCurrentScene.restrictCamera();
 		
 		float fadeInDuration = mCurrentScene.getFadeInDuration();
 		float fadeOutDuration = mCurrentScene.getFadeOutDuration();

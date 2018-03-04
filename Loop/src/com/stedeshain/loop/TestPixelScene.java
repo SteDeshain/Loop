@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.stedeshain.loop.Engine.Game;
+import com.stedeshain.loop.Engine.Component.Label;
+import com.stedeshain.loop.Engine.Component.Body.OneSidedPlatform;
 import com.stedeshain.loop.Engine.Component.Body.Role;
 import com.stedeshain.loop.Engine.Scene.PixelScene;
 import com.stedeshain.loop.Engine.Utils.Level;
@@ -18,6 +20,10 @@ public class TestPixelScene extends PixelScene
 	// temp
 	Level level;
 	Role player;
+	
+	Label fps;
+	OneSidedPlatform p;
+	OneSidedPlatform p2;
 
 	public TestPixelScene(Game motherGame)
 	{
@@ -35,7 +41,7 @@ public class TestPixelScene extends PixelScene
 				
 		this.addPhysicsModule();
 		
-		level = new Level(this, "pixel");
+		level = new Level(this, "pixel1");
 		level.init();
 		setMetersPerPixel(level.getOriginMetersPerPixel());
 
@@ -59,10 +65,10 @@ public class TestPixelScene extends PixelScene
 					this.mBody.applyLinearImpulse(impulse, 0, this.getPosition().x, this.getPosition().y, true);
 				}
 				
-				if(Gdx.input.isKeyJustPressed(Keys.SPACE) || Gdx.input.isTouched())
+				if(Gdx.input.isKeyJustPressed(Keys.SPACE))// || Gdx.input.isTouched())
 				{
 					if(player.isGrounded())
-						this.mBody.applyLinearImpulse(0, 25, this.getPosition().x, this.getPosition().y, true);
+						this.mBody.applyLinearImpulse(0, 30, this.getPosition().x, this.getPosition().y, true);
 				}
 			}
 		};
@@ -79,6 +85,27 @@ public class TestPixelScene extends PixelScene
 		player.setRestitutionDef(0);
 		player.setBulletDef(true);
 		this.addComponent(player);
+		
+		fps = new Label("FPS: ");
+		fps.setViewportAnchor(1, 1);
+		fps.setSourceAnchor(1, 1);
+		this.addComponent(fps);
+		
+		p = new OneSidedPlatform(new Vector2(0, -2), new Vector2(2, 0.2f), 0, 0, grayRegion);
+		p.setRestitutionDef(0);
+		p.setTag("terrain");
+		p.setBulletDef(true);
+		this.addComponent(p);
+		
+		p2 = new OneSidedPlatform(new Vector2(-2, -2), new Vector2(2, 0.2f), 0, 0, grayRegion);
+		p2.setRestitutionDef(0);
+		p2.setTag("terrain");
+		p2.setBulletDef(true);
+		p2.setAngleDegreeDef(45);
+		this.addComponent(p2);
+		
+		this.restrictCameraHorizontal();
+		this.restrictCameraVertical(-1, -1);
 	}
 
 	@Override
@@ -134,12 +161,12 @@ public class TestPixelScene extends PixelScene
 	@Override
 	public boolean onTouchUp(int screenX, int screenY, int pointer, int button)
 	{
-		this.setPixelScale(4);
+		//this.setPixelScale(2);
 		
 		return super.onTouchUp(screenX, screenY, pointer, button);
 	}
 	
-	boolean follow = false;
+	boolean follow = true;
 	@Override
 	public void update(float deltaTime)
 	{
@@ -147,5 +174,7 @@ public class TestPixelScene extends PixelScene
 		
 		if(follow)
 			this.setCameraPosition(player.getPosition());
+		
+		fps.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
 	}
 }
