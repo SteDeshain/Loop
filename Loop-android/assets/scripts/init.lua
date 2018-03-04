@@ -12,7 +12,6 @@ function init.registerScriptPath(path)
 		package.path = package.path .. ";" .. path
 	end
 end
-<<<<<<< HEAD
 
 function game.setFirstScene(sceneTable)
 	game.gameInstance:setFirstScene(sceneTable.sceneInstance)
@@ -34,6 +33,3 @@ function game.disposeScene(sceneTable)
 		_G[sceneTable.sceneName] = nil
 	end
 end
-
-globalAssets = {}
-Gdx = luajava.bindClass(className.Gdx)
