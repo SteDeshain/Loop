@@ -1,7 +1,6 @@
 package com.stedeshain.loop;
 
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.math.Vector2;
 import com.stedeshain.loop.Engine.Game;
 import com.stedeshain.loop.Engine.Component.Label;
 import com.stedeshain.loop.Engine.Component.UIComponent;

@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.stedeshain.loop.Engine.Game;
 import com.stedeshain.loop.Engine.Component.Label;
+import com.stedeshain.loop.Engine.Component.Body.AbstractBody;
 import com.stedeshain.loop.Engine.Component.Body.OneSidedPlatform;
 import com.stedeshain.loop.Engine.Component.Body.Role;
 import com.stedeshain.loop.Engine.Scene.PixelScene;
@@ -67,13 +68,26 @@ public class TestPixelScene extends PixelScene
 				
 				if(Gdx.input.isKeyJustPressed(Keys.SPACE))// || Gdx.input.isTouched())
 				{
-					if(player.isGrounded())
-						this.mBody.applyLinearImpulse(0, 30, this.getPosition().x, this.getPosition().y, true);
+					if(!Gdx.input.isKeyPressed(Keys.DOWN))
+					{
+						if(player.isGrounded())
+							this.mBody.applyLinearImpulse(0, 30, this.getPosition().x, this.getPosition().y, true);
+					}
+					else
+					{
+						//FIXME implement Role.getStandingTerrain()
+						this.mBody.setAwake(true);
+						AbstractBody terrain = this.getStandingTerrain();
+						if(terrain instanceof OneSidedPlatform)
+						{
+							((OneSidedPlatform)terrain).letThrougn(this.getMainFixture());
+						}
+					}
 				}
 			}
 		};
 		player.setTag("Player");
-		player.setGroundDetectorHeight(0.2f);
+		player.setGroundDetectorHeight(0.1f);
 		player.setGroundDetectorVerticalOffset(0.05f);
 		player.setGroundDetectorHorizontalShrink(0.01f);
 		player.setOwnAssets(true);

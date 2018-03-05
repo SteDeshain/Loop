@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.stedeshain.loop.Engine.Utils.Constants;
 import com.stedeshain.loop.Engine.Utils.ContactAdapter;
+import com.stedeshain.loop.Engine.Utils.Utils;
 
 public class Role extends BoxBody
 {	
@@ -81,9 +82,7 @@ public class Role extends BoxBody
 
 				if(anotherBody.matchTag(Constants.TERRAIN_TAG))
 				{
-					//TODO
-					//if(mBody.getLinearVelocity().epsilonEquals(mBody.getLinearVelocity().x, 0))
-						mGrounded = true;
+					mGrounded = true;
 					mUnderneathFixtures.add(anotherFixture);
 				}
 			}
@@ -157,11 +156,30 @@ public class Role extends BoxBody
 
 	/**
 	 * check whether this {@link Role} stands on an {@link AbstractBody} whose tag equals 
-	 * {@link com.stedeshain.loop.Engine.Utils.Constants#TERRAIN_TAG TERRAIN_TAG}, and has a vertical zero linear-velocity
-	 * @return
+	 * {@link com.stedeshain.loop.Engine.Utils.Constants#TERRAIN_TAG TERRAIN_TAG},
+	 * as well as has a zero vertical linear-velocity
+	 * @return whether this Role is grounded
 	 */
 	public boolean isGrounded()
 	{
-		return mGrounded;
+		if(mBody == null)
+			return false;
+		
+		return mGrounded && Utils.isEqual(mBody.getLinearVelocity().y, 0f);
+	}
+	
+	/**
+	 * Normally, a Role will always stand on several terrain AbstractBodies,
+	 * and this method will only find the latest terrain on which this Role stands.
+	 * @return
+	 */
+	public AbstractBody getStandingTerrain()
+	{
+		if(!isGrounded())
+			return null;
+		
+		//to this line, mUnderneathFixtures must have at least one element, so no need to check the argument validation
+		Fixture fixture = mUnderneathFixtures.get(mUnderneathFixtures.size - 1);
+		return (AbstractBody)(fixture.getBody().getUserData());
 	}
 }
