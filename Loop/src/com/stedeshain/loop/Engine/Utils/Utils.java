@@ -173,6 +173,10 @@ public class Utils
 	{
 		return MathUtils.degreesToRadians * degree;
 	}
+	public static float toDegrees(float radian)
+	{
+		return MathUtils.radiansToDegrees * radian;
+	}
 	
 	private static BitmapFont mDefaultFont = null;
 	public static BitmapFont getDefaultFont()
@@ -181,6 +185,44 @@ public class Utils
 			mDefaultFont = new BitmapFont();
 		
 		return mDefaultFont;
+	}
+	
+	/**
+	 * 
+	 * @param origin : origin Vector2 whose axis is horizontal and vertical
+	 * @param radians : angle that will be applied, in radian and as counter clock-winded
+	 * @return the Vector2 whose axis has been rotated to radians degree
+	 */
+	public static Vector2 rotateAxis(Vector2 origin, float radians)
+	{
+		Vector2 result = new Vector2();
+		
+		float sin = MathUtils.sin(radians);
+		float cos = MathUtils.cos(radians);
+		float x = origin.x * cos + origin.y * sin;
+		float y = -origin.x * sin + origin.y * cos;
+		result.set(x, y);
+		
+		return result;
+	}
+	
+	/**
+	 * get the angle between vector and x-Axis positive direction
+	 * @param vector
+	 * @return angle in degree between vector and x-Axis positive direction, [-180, 180]
+	 */
+	public static float getDegreeAngle(Vector2 vector)
+	{	
+		return toDegrees(getRadianAngle(vector));
+	}
+	/**
+	 * get the angle between vector and x-Axis positive direction
+	 * @param vector
+	 * @return angle in radian between vector and x-Axis positive direction, [-PI, PI]
+	 */
+	public static float getRadianAngle(Vector2 vector)
+	{
+		return MathUtils.atan2(vector.y, vector.x);
 	}
 	
 	public static void dispose()

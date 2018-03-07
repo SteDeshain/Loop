@@ -109,13 +109,14 @@ public class TestPixelScene extends PixelScene
 		p.setRestitutionDef(0);
 		p.setTag("terrain");
 		p.setBulletDef(true);
+		//p.setAngleDegreeDef(5);
 		this.addComponent(p);
 		
 		p2 = new OneSidedPlatform(new Vector2(-2, -2), new Vector2(2, 0.2f), 0, 0, grayRegion);
 		p2.setRestitutionDef(0);
 		p2.setTag("terrain");
 		p2.setBulletDef(true);
-		p2.setAngleDegreeDef(45);
+		p2.setAngleDegreeDef(35);
 		this.addComponent(p2);
 		
 		this.restrictCameraHorizontal();

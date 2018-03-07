@@ -154,6 +154,8 @@ public class Role extends BoxBody
 		mGroundDetectorHorizontalShrink = groundDetectorHorizontalShrink;
 	}
 
+	//FIXME Cannot use getLinearVelocity().y == 0 as the condition, because a Role
+	//will always walks upwards or downwards when its getLinearVelocity().y != 0 but it's still supposed can jump
 	/**
 	 * check whether this {@link Role} stands on an {@link AbstractBody} whose tag equals 
 	 * {@link com.stedeshain.loop.Engine.Utils.Constants#TERRAIN_TAG TERRAIN_TAG},

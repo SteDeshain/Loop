@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 /**
  * Thanks to dingjibang for his Gdx-lazy-font.
- * His jar won't work on my eclipse, so I copy his code here.
+ * His jar won't work on my eclipse, so I copied his code here.
  * His github homepage: https://github.com/dingjibang
  */
 public class LazyBitmapFont extends BitmapFont

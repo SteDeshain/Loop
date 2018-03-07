@@ -5,7 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
+import com.stedeshain.loop.Engine.Utils.Utils;
 
 /**
  * Only collide at one side of this body
@@ -19,7 +20,11 @@ public class OneSidedPlatform extends BoxBody
 	}
 
 	private StandingSide mSandingSide = StandingSide.Up;
-	private Array<Fixture> mNonCollisionFixtures = new Array<Fixture>();
+	private ObjectSet<Fixture> mNonCollisionFixtures = new ObjectSet<Fixture>();
+	/**
+	 * in degree
+	 */
+	private float mCollisionAngle = 45f;
 	
 	public OneSidedPlatform(Vector2 position, Vector2 size, float horizontalMargin, float verticalMargin,
 			TextureRegion textureRegion)
@@ -35,11 +40,14 @@ public class OneSidedPlatform extends BoxBody
 		if(anotherFixture.isSensor())
 			return;
 		
-		//TODO need to apply rotation angle
-		if(contact.getWorldManifold().getNormal().y >= 0)
+		//TODO need to apply StandingSide
+		Vector2 normal = contact.getWorldManifold().getNormal();
+		float angle = mBody.getAngle();
+		Vector2 normalAlignedPlatform = Utils.rotateAxis(normal, angle);
+		float normalAngle = Utils.getDegreeAngle(normalAlignedPlatform);
+		if(normalAngle >= 0 || (normalAngle >= -mCollisionAngle || normalAngle <= mCollisionAngle - 180))
 		{
-			if(!mNonCollisionFixtures.contains(anotherFixture, true))
-				mNonCollisionFixtures.add(anotherFixture);
+			mNonCollisionFixtures.add(anotherFixture);
 		}
 	}
 	
@@ -48,7 +56,7 @@ public class OneSidedPlatform extends BoxBody
 	{
 		super.onEndContact(anotherFixture, contact);
 		
-		mNonCollisionFixtures.removeValue(anotherFixture, true);
+		mNonCollisionFixtures.remove(anotherFixture);
 	}
 	
 	@Override
@@ -56,7 +64,7 @@ public class OneSidedPlatform extends BoxBody
 	{
 		super.onPreSolveContact(anotherFixture, contact, oldManifold);
 		
-		if(mNonCollisionFixtures.contains(anotherFixture, true))
+		if(mNonCollisionFixtures.contains(anotherFixture))
 		{
 			contact.setEnabled(false);
 		}
@@ -71,9 +79,17 @@ public class OneSidedPlatform extends BoxBody
 		mSandingSide = sandingSide;
 	}
 	
+	public float getCollisionAngle()
+	{
+		return mCollisionAngle;
+	}
+	public void setCollisionAngle(float collisionAngle)
+	{
+		mCollisionAngle = collisionAngle;
+	}
+
 	public void letThrougn(Fixture fixture)
 	{
-		if(!mNonCollisionFixtures.contains(fixture, true))
-			mNonCollisionFixtures.add(fixture);
+		mNonCollisionFixtures.add(fixture);
 	}
 }
