@@ -15,12 +15,6 @@ import com.stedeshain.loop.Engine.Utils.Utils;
  */
 public class OneSidedPlatform extends BoxBody
 {
-	public enum StandingSide
-	{
-		Up, Right, Down, Left,
-	}
-
-	private StandingSide mSandingSide = StandingSide.Up;
 	private ObjectSet<Fixture> mNonCollisionFixtures = new ObjectSet<Fixture>();
 	/**
 	 * in degree
@@ -57,7 +51,6 @@ public class OneSidedPlatform extends BoxBody
 	//package access
 	boolean shouldCollide(Vector2 worldNormal)
 	{
-		//TODO need to apply StandingSide
 		float angle = mBody.getAngle();
 		Vector2 normalAlignedPlatform = Utils.rotateAxis(worldNormal, angle);
 		float normalAngle = Utils.getDegreeAngle(normalAlignedPlatform);
@@ -84,15 +77,6 @@ public class OneSidedPlatform extends BoxBody
 		{
 			contact.setEnabled(false);
 		}
-	}
-
-	public StandingSide getSandingSide()
-	{
-		return mSandingSide;
-	}
-	public void setSandingSide(StandingSide sandingSide)
-	{
-		mSandingSide = sandingSide;
 	}
 	
 	public float getCollisionAngle()

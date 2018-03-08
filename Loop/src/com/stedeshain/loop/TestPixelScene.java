@@ -117,14 +117,14 @@ public class TestPixelScene extends PixelScene
 		//p.setAngleDegreeDef(5);
 		this.addComponent(p);
 		
-		p2 = new OneSidedPlatform(new Vector2(-2, -2), new Vector2(2, 0.2f), 0, 0, grayRegion);
+		p2 = new OneSidedPlatform(new Vector2(-2, -1.8f), new Vector2(2, 0.2f), 0, 0, grayRegion);
 		p2.setRestitutionDef(0);
 		p2.setBulletDef(true);
-		p2.setDegreeAngleDef(35);
+		p2.setDegreeAngleDef(180);
 		this.addComponent(p2);
 		
 		this.restrictCameraHorizontal();
-		this.restrictCameraVertical(-1, -1);
+		this.restrictCameraVertical(-1, 2);
 	}
 
 	@Override
