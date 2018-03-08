@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.stedeshain.loop.Engine.Utils.Constants;
 import com.stedeshain.loop.Engine.Utils.ContactAdapter;
-import com.stedeshain.loop.Engine.Utils.Utils;
 
 public class Role extends BoxBody
 {	
@@ -62,7 +61,38 @@ public class Role extends BoxBody
 		//ground detection contact listener
 		registerGroundDetection();
 	}
-	
+
+	//the second and the last place controlling whether a Role should be grounded
+	@Override
+	protected void onBeginContact(Fixture anotherFixture, Contact contact)
+	{
+		super.onBeginContact(anotherFixture, contact);
+		
+		Object anotherBody = anotherFixture.getBody().getUserData();
+		if(anotherBody instanceof OneSidedPlatform)
+		{
+			if(((OneSidedPlatform)anotherBody).shouldCollide(contact.getWorldManifold().getNormal()))
+			{
+				mGrounded = true;
+				mUnderneathFixtures.add(anotherFixture);
+			}
+		}
+	}
+	@Override
+	protected void onEndContact(Fixture anotherFixture, Contact contact)
+	{
+		super.onEndContact(anotherFixture, contact);
+
+		Object anotherBody = anotherFixture.getBody().getUserData();
+		if(anotherBody instanceof OneSidedPlatform)
+		{
+			mUnderneathFixtures.removeValue(anotherFixture, true);
+			if(mUnderneathFixtures.size <= 0)
+				mGrounded = false;
+		}
+	}
+
+	//the first place controlling whether a Role should be grounded
 	private void registerGroundDetection()
 	{
 		getMotherScene().addContactListener(new ContactAdapter()
@@ -82,8 +112,12 @@ public class Role extends BoxBody
 
 				if(anotherBody.matchTag(Constants.TERRAIN_TAG))
 				{
-					mGrounded = true;
-					mUnderneathFixtures.add(anotherFixture);
+					//Must treat the OneSidedPlatform differently
+					if(!(anotherBody instanceof OneSidedPlatform))
+					{
+						mGrounded = true;
+						mUnderneathFixtures.add(anotherFixture);
+					}
 				}
 			}
 
@@ -154,12 +188,9 @@ public class Role extends BoxBody
 		mGroundDetectorHorizontalShrink = groundDetectorHorizontalShrink;
 	}
 
-	//FIXME Cannot use getLinearVelocity().y == 0 as the condition, because a Role
-	//will always walks upwards or downwards when its getLinearVelocity().y != 0 but it's still supposed can jump
 	/**
 	 * check whether this {@link Role} stands on an {@link AbstractBody} whose tag equals 
-	 * {@link com.stedeshain.loop.Engine.Utils.Constants#TERRAIN_TAG TERRAIN_TAG},
-	 * as well as has a zero vertical linear-velocity
+	 * {@link com.stedeshain.loop.Engine.Utils.Constants#TERRAIN_TAG TERRAIN_TAG}
 	 * @return whether this Role is grounded
 	 */
 	public boolean isGrounded()
@@ -167,7 +198,7 @@ public class Role extends BoxBody
 		if(mBody == null)
 			return false;
 		
-		return mGrounded && Utils.isEqual(mBody.getLinearVelocity().y, 0f);
+		return mGrounded;
 	}
 	
 	/**

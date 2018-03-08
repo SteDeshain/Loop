@@ -185,7 +185,7 @@ public abstract class AbstractBody extends DrawableComponent
 	 * Must be called before added into a Scene
 	 * @param degreeDef : in degree
 	 */
-	public void setAngleDegreeDef(float degreeDef)
+	public void setDegreeAngleDef(float degreeDef)
 	{
 		mAngleDef = Utils.toRadians(degreeDef);
 	}

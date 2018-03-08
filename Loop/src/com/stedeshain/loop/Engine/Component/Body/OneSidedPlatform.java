@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.stedeshain.loop.Engine.Utils.Constants;
 import com.stedeshain.loop.Engine.Utils.Utils;
 
 /**
@@ -33,6 +34,14 @@ public class OneSidedPlatform extends BoxBody
 	}
 	
 	@Override
+	public void create()
+	{
+		super.create();
+		
+		setTag(Constants.TERRAIN_TAG);	//it must be a terrain
+	}
+	
+	@Override
 	protected void onBeginContact(Fixture anotherFixture, Contact contact)
 	{
 		super.onBeginContact(anotherFixture, contact);
@@ -40,15 +49,22 @@ public class OneSidedPlatform extends BoxBody
 		if(anotherFixture.isSensor())
 			return;
 		
-		//TODO need to apply StandingSide
 		Vector2 normal = contact.getWorldManifold().getNormal();
+		if(!shouldCollide(normal))
+			mNonCollisionFixtures.add(anotherFixture);
+	}
+	
+	//package access
+	boolean shouldCollide(Vector2 worldNormal)
+	{
+		//TODO need to apply StandingSide
 		float angle = mBody.getAngle();
-		Vector2 normalAlignedPlatform = Utils.rotateAxis(normal, angle);
+		Vector2 normalAlignedPlatform = Utils.rotateAxis(worldNormal, angle);
 		float normalAngle = Utils.getDegreeAngle(normalAlignedPlatform);
 		if(normalAngle >= 0 || (normalAngle >= -mCollisionAngle || normalAngle <= mCollisionAngle - 180))
-		{
-			mNonCollisionFixtures.add(anotherFixture);
-		}
+			return false;
+		else
+			return true;
 	}
 	
 	@Override

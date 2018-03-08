@@ -23,6 +23,7 @@ public class TestPixelScene extends PixelScene
 	Role player;
 	
 	Label fps;
+	Label grounded;
 	OneSidedPlatform p;
 	OneSidedPlatform p2;
 
@@ -105,18 +106,21 @@ public class TestPixelScene extends PixelScene
 		fps.setSourceAnchor(1, 1);
 		this.addComponent(fps);
 		
+		grounded = new Label("Grounded: ");
+		grounded.setViewportAnchor(1, 0.96f);
+		grounded.setSourceAnchor(1, 1);
+		this.addComponent(grounded);
+		
 		p = new OneSidedPlatform(new Vector2(0, -2), new Vector2(2, 0.2f), 0, 0, grayRegion);
 		p.setRestitutionDef(0);
-		p.setTag("terrain");
 		p.setBulletDef(true);
 		//p.setAngleDegreeDef(5);
 		this.addComponent(p);
 		
 		p2 = new OneSidedPlatform(new Vector2(-2, -2), new Vector2(2, 0.2f), 0, 0, grayRegion);
 		p2.setRestitutionDef(0);
-		p2.setTag("terrain");
 		p2.setBulletDef(true);
-		p2.setAngleDegreeDef(35);
+		p2.setDegreeAngleDef(35);
 		this.addComponent(p2);
 		
 		this.restrictCameraHorizontal();
@@ -191,5 +195,6 @@ public class TestPixelScene extends PixelScene
 			this.setCameraPosition(player.getPosition());
 		
 		fps.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
+		grounded.setText("Grounded: " +  player.isGrounded());
 	}
 }
