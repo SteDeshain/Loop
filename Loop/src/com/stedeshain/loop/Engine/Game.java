@@ -398,7 +398,7 @@ public abstract class Game implements ApplicationListener
 		//update last frame value
 		mCurrentScene.updateLastFrameValue();
 		
-		//MUST call at last of render()
+		//MUST call at the end of render()
 		mCurrentScene.removeAppendedComponents();
 	}
 

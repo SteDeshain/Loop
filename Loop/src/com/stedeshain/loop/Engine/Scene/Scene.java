@@ -35,9 +35,9 @@ import com.stedeshain.loop.Engine.Component.InputEvent.InputType;
 import com.stedeshain.loop.Engine.Component.SceneComponent;
 import com.stedeshain.loop.Engine.Component.Selector;
 import com.stedeshain.loop.Engine.Component.UIComponent;
-import com.stedeshain.loop.Engine.Component.Body.AbstractBody;
 import com.stedeshain.loop.Engine.Utils.AssetsHelper;
 import com.stedeshain.loop.Engine.Utils.Constants;
+import com.stedeshain.loop.Engine.Utils.Deepable;
 import com.stedeshain.loop.Engine.Utils.IntVector2;
 import com.stedeshain.loop.Engine.Utils.Utils;
 import com.sun.istack.internal.NotNull;
@@ -73,13 +73,19 @@ public class Scene extends InputMultiplexer implements Disposable
 	private Game mMotherGame;
 	private boolean mPaused;
 	private Array<SceneComponent> mComponents;
-	private Array<DrawableComponent> mDrawableComponents;
-	private Array<UIComponent> mUIComponents;
+	private Array<Layer> mLayers;
+	private Layer mDefaultUILayer;
+//	//FIXME remove mDrawableComponents
+//	private Array<DrawableComponent> mDrawableComponents;
+//	//FIXME remove mUIComponents, use a Layer instead
+//	private Array<UIComponent> mUIComponents;
 	/**
 	 * A reverse order comparator, cause draw() use reverse order to iterate child component.
 	 * Two negatives make a positive.
 	 */
-	private Comparator<DrawableComponent> mDrawableComparator;
+	private Comparator<Deepable> mDeepableComparator;
+//	private Comparator<DrawableComponent> mDrawableComparator;
+//	private Comparator<Layer> mLayerComparator;
 	
 	private Array<SceneComponent> mComponentsToRemoving;
 	
@@ -111,12 +117,15 @@ public class Scene extends InputMultiplexer implements Disposable
 		setPaused(false);
 		mMotherGame = motherGame;
 		mComponents = new Array<SceneComponent>();
-		mDrawableComponents = new Array<DrawableComponent>();
-		mUIComponents = new Array<UIComponent>();
-		mDrawableComparator = new Comparator<DrawableComponent>()
+		mLayers = new Array<Layer>();
+		mDefaultUILayer = new Layer(this, true);
+		mLayers.add(mDefaultUILayer);
+//		mDrawableComponents = new Array<DrawableComponent>();
+//		mUIComponents = new Array<UIComponent>();
+		mDeepableComparator = new Comparator<Deepable>()
 				{
 					@Override
-					public int compare(DrawableComponent a, DrawableComponent b)
+					public int compare(Deepable a, Deepable b)
 					{
 						if(a.getDepth() > b.getDepth())
 							return 1;
@@ -156,50 +165,79 @@ public class Scene extends InputMultiplexer implements Disposable
 		lastDragPositions = new IntMap<TouchPositionInfo>();
 	}
 	
+	public void newLayer(String name, long depth, boolean isUILayer)
+	{
+		Layer layer = new Layer(this, isUILayer);
+		layer.setName(name);
+		layer.setDepth(depth);
+		mLayers.add(layer);
+		sortLayers();
+	}
+	public Layer getLayer(@NotNull String name)
+	{
+		for(Layer layer: mLayers)
+		{
+			if(layer.matchName(name))
+				return layer;
+		}
+		return null;
+	}
+	public Layer getLayer(int index)
+	{
+		if(index < 0 || index >= mLayers.size)
+			return null;
+		
+		return mLayers.get(index);
+	}
+	public void sortLayers()
+	{
+		mLayers.sort(mDeepableComparator);
+	}
+	
 	public void addComponent(@NotNull SceneComponent component)
 	{
 		if(mComponents.contains(component, true))
 			return;
 		
 		mComponents.add(component);
-		//Separate UIComponent and DrawableComponent
-		if(component instanceof UIComponent)
-			mUIComponents.add((UIComponent)component);
-		else if(component instanceof DrawableComponent)
-			mDrawableComponents.add((DrawableComponent)component);
 		component.setMotherScene(this);
 		component.create();
 	}
+	/**
+	 * if no specified layer, the component will be added into the default UI Layer
+	 * @param component
+	 */
 	public void addComponent(@NotNull DrawableComponent component)
 	{
 		if(mComponents.contains(component, true))
 			return;
 		
-		if(component instanceof UIComponent)
-			addComponent((UIComponent)component);
-		else
-		{
-			mComponents.add(component);
-			mDrawableComponents.add((DrawableComponent)component);
-			component.setMotherScene(this);
-			component.create();
-		}
+		mComponents.add(component);
+		mDefaultUILayer.addComponent(component);
+		component.setMotherScene(this);
+		component.create();
 	}
-	public void addComponent(@NotNull UIComponent component)
+	public void addComponent(@NotNull DrawableComponent component, @NotNull String layerName)
 	{
 		if(mComponents.contains(component, true))
 			return;
 		
+		Layer targetLayer = getLayer(layerName);
+		if(targetLayer == null)
+			return;
+
 		mComponents.add(component);
-		mUIComponents.add((UIComponent)component);
+		targetLayer.addComponent(component);
 		component.setMotherScene(this);
 		component.create();
 	}
+
+
 	/**
 	 * add the component at the specific index of mComponents
 	 */
-	//TODO remove it !!! Yes ! need to remove it !!!
-	/**/
+	//FIXME remove it !!! Yes ! need to remove it !!!
+	/**
 	public void insertComponent(@NotNull SceneComponent component, int index)
 	{
 		if(mComponents.contains(component, true))
@@ -240,14 +278,13 @@ public class Scene extends InputMultiplexer implements Disposable
 		{
 			mComponents.removeIndex(index);
 			
-			if(component instanceof UIComponent)
-				mUIComponents.removeValue((UIComponent)component, true);
-			else if(component instanceof DrawableComponent)
+			if(component instanceof DrawableComponent)
 			{
-				mDrawableComponents.removeValue((DrawableComponent)component, true);
-				if(component instanceof AbstractBody)
+				DrawableComponent drawableComp = (DrawableComponent)component;
+				for(Layer layer: mLayers)
 				{
-					((AbstractBody)component).disposePhysics();
+					if(layer.removeComponent(drawableComp))
+						break;
 				}
 			}
 
@@ -259,11 +296,11 @@ public class Scene extends InputMultiplexer implements Disposable
 	{
 		return mComponents.contains(component, true);
 	}
-	
+
 	/**
 	 * find component by name
 	 * @param name
-	 * @return first component matching the specified name
+	 * @return first component matching the given name
 	 */
 	public SceneComponent getComponent(@NotNull String name)
 	{
@@ -303,6 +340,7 @@ public class Scene extends InputMultiplexer implements Disposable
 		mContactListeners.add(listener);
 	}
 
+	//FIXME sort every layer
 	/**
 	 * Can not be called in update() or draw()
 	 */
@@ -312,15 +350,11 @@ public class Scene extends InputMultiplexer implements Disposable
 		//Cause libGDX has a good implementation of postRunnable(), saying this:
 		//"This will run the code in the Runnable in the rendering thread in the next frame, 
 		//before ApplicationListener.render() is called."
-		mDrawableComponents.sort(mDrawableComparator);
-	}
-	/**
-	 * Can not be called in update() or draw()
-	 */
-	public void sortUIs()
-	{
-		//TODO may sort in another thread like above
-		mUIComponents.sort(mDrawableComparator);
+		sortLayers();
+		for(Layer layer: mLayers)
+		{
+			layer.sortDrawables(mDeepableComparator);
+		}
 	}
 	
 	public void addPhysicsModule()
@@ -519,33 +553,23 @@ public class Scene extends InputMultiplexer implements Disposable
 		mCamera.update();
 	}
 	
+	//FIXME draw every layer
 	public void draw()
 	{
 		mBatch.setProjectionMatrix(mCamera.combined);
 		mBatch.begin();
 		
-		for(int i = mDrawableComponents.size - 1; i >= 0; i--)
+		for(int i = mLayers.size - 1; i >= 0; i--)
 		{
-			if(mDrawableComponents.get(i).isVisible())
-				mDrawableComponents.get(i).draw(mBatch);
-		}
-
-		mBatch.end();
-		
-		//draw UI
-		drawUI();
-	}
-
-	protected void drawUI()
-	{
-		mBatch.setProjectionMatrix(mUICamera.combined);
-		mBatch.begin();
-		
-		for(int i = mUIComponents.size - 1; i >= 0; i--)
-		{
-			UIComponent ui = mUIComponents.get(i);
-			if(ui.isVisible())
-				ui.draw(mBatch);
+			Layer curLayer = mLayers.get(i);
+			if(curLayer.isVisible())
+			{
+				if(!curLayer.isUILayer())
+					mBatch.setProjectionMatrix(mCamera.combined);
+				else
+					mBatch.setProjectionMatrix(mUICamera.combined);
+				curLayer.draw(mBatch);
+			}
 		}
 
 		mBatch.end();
@@ -622,6 +646,7 @@ public class Scene extends InputMultiplexer implements Disposable
 		mComponentsToRemoving.clear();
 	}
 	
+	//FIXME resize on every layer
 	public void resize(int width, int height)
 	{
 		//TODO maybe separate ViewportFixedType and UIViewportFixedType ?
@@ -647,9 +672,9 @@ public class Scene extends InputMultiplexer implements Disposable
 		mCamera.update();
 		mUICamera.update();
 		
-		for(int i = mUIComponents.size - 1; i >= 0; i--)
+		for(int i = mLayers.size - 1; i >= 0; i--)
 		{
-			mUIComponents.get(i).resize(width, height);
+			mLayers.get(i).resize(width, height);
 		}
 	}
 	
@@ -965,18 +990,17 @@ public class Scene extends InputMultiplexer implements Disposable
 		InputEvent event = Pools.obtain(InputEvent.class);
 		event.initKey(this, InputType.KeyDown, keycode, InputEvent.INVALID_TYPEDCHAR);
 		
-		boolean handeled = false;
-		
-		for(int i = mUIComponents.size - 1; i >= 0; i--)
+		boolean handled = false;
+		for(int i = mLayers.size - 1; i >= 0; i--)
 		{
-			handeled |= mUIComponents.get(i).fire(event);
-			if(handeled == true)
+			handled |= mLayers.get(i).fireInputEvent(event);
+			if(handled)
 				break;
 		}
 		
 		Pools.free(event);
 		
-		return onKeyPressed(keycode) || handeled;
+		return onKeyPressed(keycode) || handled;
 	}
 	/**
 	 * Override it to register key down event
@@ -994,18 +1018,17 @@ public class Scene extends InputMultiplexer implements Disposable
 		InputEvent event = Pools.obtain(InputEvent.class);
 		event.initKey(this, InputType.KeyUp, keycode, InputEvent.INVALID_TYPEDCHAR);
 		
-		boolean handeled = false;
-		
-		for(int i = mUIComponents.size - 1; i >= 0; i--)
+		boolean handled = false;
+		for(int i = mLayers.size - 1; i >= 0; i--)
 		{
-			handeled |= mUIComponents.get(i).fire(event);
-			if(handeled == true)
+			handled |= mLayers.get(i).fireInputEvent(event);
+			if(handled)
 				break;
 		}
 		
 		Pools.free(event);
 		
-		return onKeyReleased(keycode) || handeled;
+		return onKeyReleased(keycode) || handled;
 	}
 	/**
 	 * Override it to register key up event
@@ -1023,18 +1046,17 @@ public class Scene extends InputMultiplexer implements Disposable
 		InputEvent event = Pools.obtain(InputEvent.class);
 		event.initKey(this, InputType.KeyTyped, InputEvent.INVALID_KEYCODE, character);
 		
-		boolean handeled = false;
-		
-		for(int i = mUIComponents.size - 1; i >= 0; i--)
+		boolean handled = false;
+		for(int i = mLayers.size - 1; i >= 0; i--)
 		{
-			handeled |= mUIComponents.get(i).fire(event);
-			if(handeled == true)
+			handled |= mLayers.get(i).fireInputEvent(event);
+			if(handled)
 				break;
 		}
 		
 		Pools.free(event);
 		
-		return onKeyTyped(character) || handeled;
+		return onKeyTyped(character) || handled;
 	}
 	/**
 	 * Override it to register key typed event
@@ -1056,15 +1078,15 @@ public class Scene extends InputMultiplexer implements Disposable
 		InputEvent event = Pools.obtain(InputEvent.class);
 		event.initMouse(this, InputType.MouseMoved, viewportX, viewportY, 0);
 		
-		boolean handeled = false;
+		boolean handled = false;
 		UIComponent target = hit(viewportX, viewportY);
 		if(target != null)
 		{
-			handeled = target.fire(event);
+			handled = target.fire(event);
 		}
 		Pools.free(event);
 		
-		return onMouseMoved(screenX, screenY) || handeled;
+		return onMouseMoved(screenX, screenY) || handled;
 	}
 	/**
 	 * Override it to register mouse moved event
@@ -1118,15 +1140,16 @@ public class Scene extends InputMultiplexer implements Disposable
 
 	private UIComponent hit(float viewportX, float viewportY)
 	{
-		for(int i = mUIComponents.size - 1; i >= 0; i--)
+		for(int i = mLayers.size - 1; i >= 0; i--)
 		{
-			UIComponent ui = mUIComponents.get(i);
-			if(ui.hit(viewportX, viewportY))
+			UIComponent ui = mLayers.get(i).hit(viewportX, viewportY);
+			if(ui != null)
 				return ui;
 		}
 		return null;
 	}
-	
+
+	//FIXME clear on every UI Layer
 	/**
 	 * Called after another Scene shows up.
 	 * This will reset all the UIComponents to the very origin state
@@ -1135,12 +1158,13 @@ public class Scene extends InputMultiplexer implements Disposable
 	 */
 	public void clearSceneState()
 	{
-		for(int i = mUIComponents.size - 1; i >= 0; i--)
+		for(int i = mLayers.size - 1; i >= 0; i--)
 		{
-			mUIComponents.get(i).clearInputEvent();
+			mLayers.get(i).clearInputEvent();
 		}
 	}
 	
+	//FIXME remove or add some unnecessary or necessary lines
 	@Override
 	public void dispose()
 	{
@@ -1148,11 +1172,10 @@ public class Scene extends InputMultiplexer implements Disposable
 		if(mBatch != null)
 			mBatch.dispose();
 		
-		for(DrawableComponent drawable: mDrawableComponents)
-			drawable.dispose();
-
-		for(UIComponent ui: mUIComponents)
-			ui.dispose();
+		for(int i = mLayers.size - 1; i >= 0; i--)
+		{
+			mLayers.get(i).dispose();
+		}
 		
 		if(mSceneAssets != null)
 			mSceneAssets.dispose();

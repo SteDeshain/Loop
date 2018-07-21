@@ -43,6 +43,9 @@ public class TestPixelScene extends PixelScene
 				
 		this.addPhysicsModule();
 		
+		this.newLayer("main", 1, false);
+		this.newLayer("debug_ui", 0, true);
+		
 		level = new Level(this, "pixel1");
 		level.init();
 		setMetersPerPixel(level.getOriginMetersPerPixel());
@@ -99,29 +102,30 @@ public class TestPixelScene extends PixelScene
 		player.setFrictionDef(0.9f);
 		player.setRestitutionDef(0);
 		player.setBulletDef(true);
-		this.addComponent(player);
+		this.addComponent(player, "main");
 		
 		fps = new Label("FPS: ");
 		fps.setViewportAnchor(1, 1);
 		fps.setSourceAnchor(1, 1);
-		this.addComponent(fps);
+		this.addComponent(fps, "debug_ui");
 		
 		grounded = new Label("Grounded: ");
 		grounded.setViewportAnchor(1, 0.96f);
 		grounded.setSourceAnchor(1, 1);
-		this.addComponent(grounded);
+		this.addComponent(grounded, "main");
 		
 		p = new OneSidedPlatform(new Vector2(0, -2), new Vector2(2, 0.2f), 0, 0, grayRegion);
 		p.setRestitutionDef(0);
 		p.setBulletDef(true);
 		//p.setAngleDegreeDef(5);
-		this.addComponent(p);
+		this.addComponent(p, "main");
 		
 		p2 = new OneSidedPlatform(new Vector2(-2, -1.8f), new Vector2(2, 0.2f), 0, 0, grayRegion);
 		p2.setRestitutionDef(0);
 		p2.setBulletDef(true);
 		p2.setDegreeAngleDef(180);
-		this.addComponent(p2);
+		this.addComponent(p2, "main");
+		
 		
 		this.restrictCameraHorizontal();
 		this.restrictCameraVertical(-1, 2);

@@ -5,13 +5,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.stedeshain.loop.Engine.Scene.Layer;
 import com.stedeshain.loop.Engine.Utils.Constants;
+import com.stedeshain.loop.Engine.Utils.Deepable;
 import com.sun.istack.internal.NotNull;
 
-public class DrawableComponent extends SceneComponent implements Disposable
+public class DrawableComponent extends SceneComponent implements Disposable, Deepable
 {
 	public static final long BOTTOM_DEPTH = Long.MIN_VALUE;
 	public static final long TOP_DEPTH = Long.MAX_VALUE;
+
+	private Layer mMotherLayer;
 	
 	private boolean mVisible = true;
 	/**
@@ -241,6 +245,15 @@ public class DrawableComponent extends SceneComponent implements Disposable
 					Constants.TEXTURE_MAG_FILTER);
 	}
 
+	public Layer getMotherLayer()
+	{
+		return mMotherLayer;
+	}
+	public void setMotherLayer(Layer motherLayer)
+	{
+		mMotherLayer = motherLayer;
+	}
+	
 	public boolean isOwnAssets()
 	{
 		return mOwnAssets;

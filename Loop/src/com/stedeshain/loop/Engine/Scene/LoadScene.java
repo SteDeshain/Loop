@@ -12,7 +12,7 @@ import com.sun.istack.internal.NotNull;
  * So a LoadScene will not load its own assets
  * @author SteDeshain
  */
-public class LoadScene extends UIScene
+public class LoadScene extends Scene
 {
 	/**
 	 * if a LoadScene find the Game assets has not been loaded yet,
@@ -36,7 +36,7 @@ public class LoadScene extends UIScene
 	 */
 	public LoadScene(Game motherGame, @NotNull Scene nextScene)
 	{
-		super(motherGame);
+		super(motherGame, null);
 		
 		mNextScene = nextScene;
 		allAssetsToLoading = new Array<AssetsHelper>();

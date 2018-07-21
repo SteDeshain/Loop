@@ -16,6 +16,7 @@ public abstract class SceneComponent
 	
 	abstract public void update(float deltaTime);
 	
+	//TODO move to DrawableComponent ?
 	/**
 	 * synchronize drawable position with physics body
 	 */
@@ -95,7 +96,7 @@ public abstract class SceneComponent
 	/**
 	 * Add this component to motherScene's mComponentsToRemoving list,
 	 * it will be removed at the end of this frame.
-	 * This method won't set motherScene to null, this task is handled by its motherScene.
+	 * This method won't set motherScene(or motherLayer) to null, this task is handled by its motherScene.
 	 * When overriding it, make sure to check whether motherScene == null, 
 	 * if so, better just return.
 	 */

@@ -4,10 +4,10 @@ import com.badlogic.gdx.audio.Music;
 import com.stedeshain.loop.Engine.Game;
 import com.stedeshain.loop.Engine.Component.Label;
 import com.stedeshain.loop.Engine.Component.UIComponent;
-import com.stedeshain.loop.Engine.Scene.UIScene;
+import com.stedeshain.loop.Engine.Scene.Scene;
 import com.stedeshain.loop.Engine.Utils.Utils;
 
-public class TitleScene extends UIScene
+public class TitleScene extends Scene
 {
 	TestPixelScene testPixelScene;
 	Label hint;
@@ -15,7 +15,7 @@ public class TitleScene extends UIScene
 	
 	public TitleScene(Game motherGame)
 	{
-		super(motherGame);
+		super(motherGame, null);
 	}
 
 	@Override

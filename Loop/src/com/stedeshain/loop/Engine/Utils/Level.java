@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Disposable;
+import com.stedeshain.loop.Engine.Component.DrawableComponent;
 import com.stedeshain.loop.Engine.Component.SceneComponent;
 import com.stedeshain.loop.Engine.Component.Body.BoxBody;
 import com.stedeshain.loop.Engine.Component.Body.ChainBody;
@@ -206,8 +207,13 @@ public class Level implements Disposable
 				body.setTag(tag);
 				comp = body;
 			}
+			//FIXME temp
 			if(comp != null)
-				mScene.addComponent(comp);
+//				mScene.addComponent(comp);
+			{
+				if(comp instanceof DrawableComponent)
+					mScene.addComponent((DrawableComponent)comp, "main");
+			}
 		}
 	}
 

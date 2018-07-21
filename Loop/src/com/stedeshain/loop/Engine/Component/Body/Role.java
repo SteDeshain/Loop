@@ -62,7 +62,7 @@ public class Role extends BoxBody
 		registerGroundDetection();
 	}
 
-	//the second and the last place controlling whether a Role should be grounded
+	//the second and the last place telling whether a Role should be grounded
 	@Override
 	protected void onBeginContact(Fixture anotherFixture, Contact contact)
 	{
@@ -92,7 +92,7 @@ public class Role extends BoxBody
 		}
 	}
 
-	//the first place controlling whether a Role should be grounded
+	//the first place telling whether a Role should be grounded
 	private void registerGroundDetection()
 	{
 		getMotherScene().addContactListener(new ContactAdapter()

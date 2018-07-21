@@ -75,6 +75,7 @@ public class Selector extends UIComponent
 	 */
 	private static IdentityMap<Scene, Selector> sSelectors = new IdentityMap<Scene, Selector>();
 	
+	//TODO a selector may exists in some Layer rather than the default UI Layer
 	public static Selector generateSelector(@NotNull Scene scene, @NotNull TextureRegion region, float padding)
 	{
 		if(!sSelectors.containsKey(scene))
@@ -82,7 +83,8 @@ public class Selector extends UIComponent
 			Selector instance = new Selector(region, padding);
 			instance.setDepthToBottom();
 			instance.setSourceAnchor(0.5f, 0.5f);
-			scene.insertComponent(instance, 0);
+//			scene.insertComponent(instance, 0);
+			scene.addComponent(instance);
 			sSelectors.put(scene, instance);
 			return instance;
 		}
