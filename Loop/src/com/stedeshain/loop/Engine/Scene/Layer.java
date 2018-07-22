@@ -54,15 +54,6 @@ public class Layer implements Deepable, Disposable
 			mUIComponents.add((UIComponent)component);
 		}
 	}
-//	void addComponent(@NotNull UIComponent component)
-//	{
-//		if(mDrawableComponents.contains(component, true))
-//			return;
-//		
-//		mDrawableComponents.add(component);
-//		component.setMotherLayer(this);
-//		mUIComponents.add((UIComponent)component);
-//	}
 	
 	//package access
 	void sortDrawables(Comparator<Deepable> comparator)
