@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -76,11 +75,17 @@ public class Scene extends InputMultiplexer implements Disposable
 	private Array<SceneComponent> mComponents;
 	private Array<Layer> mLayers;
 	private Layer mDefaultUILayer;
+//	//FIXME remove mDrawableComponents
+//	private Array<DrawableComponent> mDrawableComponents;
+//	//FIXME remove mUIComponents, use a Layer instead
+//	private Array<UIComponent> mUIComponents;
 	/**
 	 * A reverse order comparator, cause draw() use reverse order to iterate child component.
 	 * Two negatives make a positive.
 	 */
 	private Comparator<Deepable> mDeepableComparator;
+//	private Comparator<DrawableComponent> mDrawableComparator;
+//	private Comparator<Layer> mLayerComparator;
 	
 	private Array<SceneComponent> mComponentsToRemoving;
 	
@@ -113,7 +118,10 @@ public class Scene extends InputMultiplexer implements Disposable
 		mMotherGame = motherGame;
 		mComponents = new Array<SceneComponent>();
 		mLayers = new Array<Layer>();
-		mDefaultUILayer = newLayer(Constants.DEFAULT_UI_LAYER_NAME, 0, true);
+		mDefaultUILayer = new Layer(this, true);
+		mLayers.add(mDefaultUILayer);
+//		mDrawableComponents = new Array<DrawableComponent>();
+//		mUIComponents = new Array<UIComponent>();
 		mDeepableComparator = new Comparator<Deepable>()
 				{
 					@Override
@@ -157,34 +165,23 @@ public class Scene extends InputMultiplexer implements Disposable
 		lastDragPositions = new IntMap<TouchPositionInfo>();
 	}
 	
-	public Layer newLayer(String name, long depth, boolean isUILayer)
+	public void newLayer(String name, long depth, boolean isUILayer)
 	{
 		Layer layer = new Layer(this, isUILayer);
 		layer.setName(name);
 		layer.setDepth(depth);
+		mLayers.add(layer);
 		sortLayers();
-		
-		return layer;
-	}
-	//package access. used in Layer constructor to add themselves into Scene's mLayers
-	Array<Layer> getLayers()
-	{
-		return mLayers;
 	}
 	public Layer getLayer(@NotNull String name)
 	{
-		for(int i = mLayers.size - 1; i >= 0; i--)
+		for(Layer layer: mLayers)
 		{
-			Layer curLayer = mLayers.get(i);
-			if(curLayer.matchName(name))
-				return curLayer;
-			Layer curChildLayer = curLayer.getChildeLayer(name);
-			if(curChildLayer != null)
-				return curChildLayer;
+			if(layer.matchName(name))
+				return layer;
 		}
 		return null;
 	}
-	/*
 	public Layer getLayer(int index)
 	{
 		if(index < 0 || index >= mLayers.size)
@@ -192,15 +189,9 @@ public class Scene extends InputMultiplexer implements Disposable
 		
 		return mLayers.get(index);
 	}
-	*/
-	
 	public void sortLayers()
 	{
 		mLayers.sort(mDeepableComparator);
-		for(int i = mLayers.size - 1; i >= 0; i--)
-		{
-			mLayers.get(i).sortLayers(mDeepableComparator);
-		}
 	}
 	
 	public void addComponent(@NotNull SceneComponent component)
@@ -290,9 +281,9 @@ public class Scene extends InputMultiplexer implements Disposable
 			if(component instanceof DrawableComponent)
 			{
 				DrawableComponent drawableComp = (DrawableComponent)component;
-				for(int i = mLayers.size - 1; i >= 0; i--)
+				for(Layer layer: mLayers)
 				{
-					if(mLayers.get(i).removeComponent(drawableComp))
+					if(layer.removeComponent(drawableComp))
 						break;
 				}
 			}
@@ -360,9 +351,9 @@ public class Scene extends InputMultiplexer implements Disposable
 		//"This will run the code in the Runnable in the rendering thread in the next frame, 
 		//before ApplicationListener.render() is called."
 		sortLayers();
-		for(int i = mLayers.size - 1; i >= 0; i--)
+		for(Layer layer: mLayers)
 		{
-			mLayers.get(i).sortDrawables(mDeepableComparator);
+			layer.sortDrawables(mDeepableComparator);
 		}
 	}
 	
@@ -562,7 +553,7 @@ public class Scene extends InputMultiplexer implements Disposable
 		mCamera.update();
 	}
 	
-	//FIXME bug here
+	//FIXME draw every layer
 	public void draw()
 	{
 		mBatch.setProjectionMatrix(mCamera.combined);
@@ -577,25 +568,7 @@ public class Scene extends InputMultiplexer implements Disposable
 					mBatch.setProjectionMatrix(mCamera.combined);
 				else
 					mBatch.setProjectionMatrix(mUICamera.combined);
-				Texture curLayerTexture = curLayer.draw(mBatch);
-				
-				Vector2 curSize = curLayer.getSize();
-				if(Utils.isVectorLyingOnAxis(curSize))	//invalid size
-				{
-					curSize.set(toUIViewportLength(Gdx.graphics.getWidth()),
-							toUIViewportLength(Gdx.graphics.getHeight()));
-//					curSize.set(800f, 480f);	//temp
-				}
-				IntVector2 curScreenSize = new IntVector2(
-						toScreenLengthFromUIViewport(curSize.x),
-						toScreenLengthFromUIViewport(curSize.y));
-				Vector2 curPosition = curLayer.getPosition();
-				TextureRegion region = new TextureRegion(curLayerTexture, 0, 0, curScreenSize.x, curScreenSize.y);
-//				mBatch.draw(curLayerTexture, curPosition.x, curPosition.y, 0f, 0f,
-//						curSize.x, curSize.y, 1f, 1f, 0f, 0, 0,
-//						curScreenSize.x, curScreenSize.y, false, true);
-				mBatch.draw(region, curPosition.x, curPosition.y,
-						0f, 0f, curSize.x, curSize.y, 1f, 1f, 0f);
+				curLayer.draw(mBatch);
 			}
 		}
 
@@ -1148,38 +1121,6 @@ public class Scene extends InputMultiplexer implements Disposable
 		Vector3 viewportPosition = mUICamera.unproject(screenPosition);
 		
 		Vector2 result = new Vector2(viewportPosition.x, viewportPosition.y);
-		Pools.free(screenPosition);
-		
-		return result;
-	}
-	public float toUIViewportLength(int screenLength)
-	{
-		Vector3 screenPosition = Pools.obtain(Vector3.class);
-		screenPosition.set(screenLength, 0f, 0f);
-		Vector3 viewportPosition = mUICamera.unproject(screenPosition);
-		
-		float result = viewportPosition.x;
-		Pools.free(screenPosition);
-		return result;
-	}
-	public IntVector2 toScreenCoordinationFromUIViewport(float x, float y)
-	{
-		Vector3 worldPosition = Pools.obtain(Vector3.class);
-		worldPosition.set(x, y, 0f);
-		Vector3 screenPosition = mUICamera.project(worldPosition);
-		
-		IntVector2 result = new IntVector2((int)screenPosition.x, (int)screenPosition.y);
-		Pools.free(screenPosition);
-		
-		return result;
-	}
-	public int toScreenLengthFromUIViewport(float viewportLength)
-	{
-		Vector3 worldPosition = Pools.obtain(Vector3.class);
-		worldPosition.set(viewportLength, 0f, 0f);
-		Vector3 screenPosition = mUICamera.project(worldPosition);
-		
-		int result = (int)screenPosition.x;
 		Pools.free(screenPosition);
 		
 		return result;
