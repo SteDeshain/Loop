@@ -1,6 +1,7 @@
 package com.stedeshain.loop;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.stedeshain.loop.Engine.Game;
 import com.stedeshain.loop.Engine.Component.Label;
 import com.stedeshain.loop.Engine.Component.UIComponent;
@@ -47,6 +48,7 @@ public class TitleScene extends Scene
 		
 		testPixelScene = new TestPixelScene(getMotherGame());
 		testPixelScene.setFadeInDuration(0.5f);
+		testPixelScene.addAssetToLoading(Utils.getImageAssetPath("dirt_ground.atlas"), TextureAtlas.class);
 		getMotherGame().beginScene(testPixelScene);
 	}
 	

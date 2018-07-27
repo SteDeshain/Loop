@@ -48,6 +48,8 @@ public class Constants
 	
 	public static final String TERRAIN_TAG = "terrain";
 	
+	public static final String DEFAULT_UI_LAYER_NAME = "DefaultUILayer";
+	
 	//debug use
 	public static final Color TOUCH_CROSS_LINE_COLOR = Color.BLUE;
 	public static final Color TOUCH_INFO_TEXT_COLOR = Color.GREEN;

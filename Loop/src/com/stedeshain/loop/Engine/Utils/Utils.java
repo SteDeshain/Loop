@@ -68,6 +68,11 @@ public class Utils
 		return a.epsilonEquals(b, Constants.FLOAT_PRECISION);
 	}
 	
+	public static boolean isVectorLyingOnAxis(Vector2 vector)
+	{
+		return vector.x == 0 || vector.y == 0;
+	}
+	
 	public enum VectorConvertMode
 	{
 		NegativeToZero,

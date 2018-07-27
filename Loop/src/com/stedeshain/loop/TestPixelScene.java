@@ -4,15 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.stedeshain.loop.Engine.Game;
 import com.stedeshain.loop.Engine.Component.Label;
 import com.stedeshain.loop.Engine.Component.Body.AbstractBody;
+import com.stedeshain.loop.Engine.Component.Body.BoxBody;
 import com.stedeshain.loop.Engine.Component.Body.OneSidedPlatform;
 import com.stedeshain.loop.Engine.Component.Body.Role;
 import com.stedeshain.loop.Engine.Scene.PixelScene;
+import com.stedeshain.loop.Engine.Utils.Constants;
 import com.stedeshain.loop.Engine.Utils.Level;
 import com.stedeshain.loop.Engine.Utils.Utils;
 
@@ -112,7 +115,7 @@ public class TestPixelScene extends PixelScene
 		grounded = new Label("Grounded: ");
 		grounded.setViewportAnchor(1, 0.96f);
 		grounded.setSourceAnchor(1, 1);
-		this.addComponent(grounded, "main");
+		this.addComponent(grounded, "debug_ui");
 		
 		p = new OneSidedPlatform(new Vector2(0, -2), new Vector2(2, 0.2f), 0, 0, grayRegion);
 		p.setRestitutionDef(0);
@@ -126,9 +129,22 @@ public class TestPixelScene extends PixelScene
 		p2.setDegreeAngleDef(180);
 		this.addComponent(p2, "main");
 		
+		this.newLayer("second", -1, false);
+		
+		TextureAtlas pixelAtlas = this.getAssetsHelper().getTextureAtlas(Utils.getImageAssetPath("dirt_ground.atlas"));
+		BoxBody pixelBox = new BoxBody(new Vector2(-3, -3f), 1.0f, true, pixelAtlas.findRegion("ground1"));
+		pixelBox.setRestitutionDef(0.6f);
+		pixelBox.setBulletDef(true);
+		pixelBox.setTag(Constants.TERRAIN_TAG);
+		pixelBox.setBodyTypeDef(BodyType.DynamicBody);
+		this.addComponent(pixelBox, "second");
+		
+		this.sortDrawables();
+		
+//		this.setPixelScale(2);
 		
 		this.restrictCameraHorizontal();
-		this.restrictCameraVertical(-1, 2);
+//		this.restrictCameraVertical(-1, 2);
 	}
 
 	@Override

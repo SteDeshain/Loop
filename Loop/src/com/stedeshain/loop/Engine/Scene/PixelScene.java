@@ -73,7 +73,7 @@ public class PixelScene extends Scene
 		
 		OrthographicCamera camera = getCamera();
 		
-		if(this.getViewportFixedType() == ViewportFixedType.FixedHeight)
+		if(getViewportFixedType() == ViewportFixedType.FixedHeight)
 		{
 			float aspectRatio = (float)camera.viewportWidth / (float)camera.viewportHeight;
 			int originPixelHeight = (int)(camera.viewportHeight / mMetersPerPixel);
@@ -83,7 +83,7 @@ public class PixelScene extends Scene
 			camera.viewportWidth = camera.viewportHeight * aspectRatio;
 			camera.update();
 		}
-		else if(this.getViewportFixedType() == ViewportFixedType.FixedWidth)
+		else if(getViewportFixedType() == ViewportFixedType.FixedWidth)
 		{
 			float aspectRatio = (float)camera.viewportHeight / (float)camera.viewportWidth;
 			int originPixelWidth = (int)(camera.viewportWidth / mMetersPerPixel);

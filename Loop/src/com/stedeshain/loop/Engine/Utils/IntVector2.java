@@ -1,9 +1,11 @@
 package com.stedeshain.loop.Engine.Utils;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class IntVector2
 {
-	int x;
-	int y;
+	public int x;
+	public int y;
 	
 	public IntVector2()
 	{
@@ -14,6 +16,17 @@ public class IntVector2
 	{
 		this.x = x;
 		this.y = y;
+	}
+
+	public IntVector2(Vector2 vector)
+	{
+		this.x = (int)vector.x;
+		this.y = (int)vector.y;
+	}
+	public IntVector2(IntVector2 vector)
+	{
+		this.x = vector.x;
+		this.y = vector.y;
 	}
 	public void set(int x, int y)
 	{
