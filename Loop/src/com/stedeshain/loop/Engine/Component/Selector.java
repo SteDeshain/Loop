@@ -84,6 +84,7 @@ public class Selector extends UIComponent
 			instance.setDepthToBottom();
 			instance.setSourceAnchor(0.5f, 0.5f);
 //			scene.insertComponent(instance, 0);
+			//TODO here
 			scene.addComponent(instance);
 			sSelectors.put(scene, instance);
 			return instance;

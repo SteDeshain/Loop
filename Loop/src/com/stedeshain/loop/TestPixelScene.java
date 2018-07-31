@@ -4,10 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.stedeshain.loop.Engine.Game;
+import com.stedeshain.loop.Engine.Component.CheckBox;
+import com.stedeshain.loop.Engine.Component.CheckableButton.OnCheckListener;
+import com.stedeshain.loop.Engine.Component.CheckableButton.OnDecheckListener;
 import com.stedeshain.loop.Engine.Component.Label;
 import com.stedeshain.loop.Engine.Component.Body.AbstractBody;
 import com.stedeshain.loop.Engine.Component.Body.OneSidedPlatform;
@@ -17,11 +21,11 @@ import com.stedeshain.loop.Engine.Utils.Level;
 import com.stedeshain.loop.Engine.Utils.Utils;
 
 public class TestPixelScene extends PixelScene
-{	
+{
 	// temp
 	Level level;
 	Role player;
-	
+
 	Label fps;
 	Label grounded;
 	OneSidedPlatform p;
@@ -37,15 +41,15 @@ public class TestPixelScene extends PixelScene
 	{
 		super.create();
 
-//		oneTime();
-//		twoTime();
-//		threeTime();
-				
+		// oneTime();
+		// twoTime();
+		// threeTime();
+
 		this.addPhysicsModule();
-		
+
 		this.newLayer("main", 1, false);
 		this.newLayer("debug_ui", 0, true);
-		
+
 		level = new Level(this, "pixel1");
 		level.init();
 		setMetersPerPixel(level.getOriginMetersPerPixel());
@@ -57,20 +61,21 @@ public class TestPixelScene extends PixelScene
 			public void update(float deltaTime)
 			{
 				super.update(deltaTime);
-				
+
 				float maxVelocity = player.isGrounded() ? 3 : 1.5f;
 				float impulse = player.isGrounded() ? 4 : 2;
 				if(Gdx.input.isKeyPressed(Keys.A) && this.mBody.getLinearVelocity().x > -maxVelocity)
 				{
 					this.mBody.applyLinearImpulse(-impulse, 0, this.getPosition().x, this.getPosition().y, true);
 				}
-				else if((Gdx.input.isKeyPressed(Keys.D) || Gdx.app.getType() == ApplicationType.Android) && 
-						this.mBody.getLinearVelocity().x < maxVelocity)
+				else if((Gdx.input.isKeyPressed(Keys.D) || Gdx.app.getType() == ApplicationType.Android)
+						&& this.mBody.getLinearVelocity().x < maxVelocity)
 				{
 					this.mBody.applyLinearImpulse(impulse, 0, this.getPosition().x, this.getPosition().y, true);
 				}
-				
-				if(Gdx.input.isKeyJustPressed(Keys.SPACE))// || Gdx.input.isTouched())
+
+				if(Gdx.input.isKeyJustPressed(Keys.SPACE))// ||
+															// Gdx.input.isTouched())
 				{
 					if(!Gdx.input.isKeyPressed(Keys.DOWN))
 					{
@@ -79,7 +84,7 @@ public class TestPixelScene extends PixelScene
 					}
 					else
 					{
-						//FIXME implement Role.getStandingTerrain()
+						// FIXME implement Role.getStandingTerrain()
 						this.mBody.setAwake(true);
 						AbstractBody terrain = this.getStandingTerrain();
 						if(terrain instanceof OneSidedPlatform)
@@ -103,30 +108,52 @@ public class TestPixelScene extends PixelScene
 		player.setRestitutionDef(0);
 		player.setBulletDef(true);
 		this.addComponent(player, "main");
-		
+
 		fps = new Label("FPS: ");
 		fps.setViewportAnchor(1, 1);
 		fps.setSourceAnchor(1, 1);
 		this.addComponent(fps, "debug_ui");
-		
+
+		TextureAtlas colors = this.getAssetsHelper().getTextureAtlas(Utils.getImageAssetPath("color_tiles.atlas"));
+		CheckBox cb = new CheckBox("ShowBounds", Utils.getDefaultFont(), colors.findRegion("white"),
+				colors.findRegion("red"));
+		cb.setSourceAnchor(1, 1);
+		cb.setViewportAnchor(1, 0.9f);
+		cb.setOnCheckListener(new OnCheckListener()
+		{
+			@Override
+			public void onCheck()
+			{
+				TestPixelScene.this.getMotherGame().setDebugMode(true);
+			}
+		});
+		cb.setOnDecheckListener(new OnDecheckListener()
+		{
+			@Override
+			public void onDecheck()
+			{
+				TestPixelScene.this.getMotherGame().setDebugMode(false);
+			}
+		});
+		this.addComponent(cb, "debug_ui");
+
 		grounded = new Label("Grounded: ");
 		grounded.setViewportAnchor(1, 0.96f);
 		grounded.setSourceAnchor(1, 1);
 		this.addComponent(grounded, "main");
-		
+
 		p = new OneSidedPlatform(new Vector2(0, -2), new Vector2(2, 0.2f), 0, 0, grayRegion);
 		p.setRestitutionDef(0);
 		p.setBulletDef(true);
-		//p.setAngleDegreeDef(5);
+		// p.setAngleDegreeDef(5);
 		this.addComponent(p, "main");
-		
+
 		p2 = new OneSidedPlatform(new Vector2(-2, -1.8f), new Vector2(2, 0.2f), 0, 0, grayRegion);
 		p2.setRestitutionDef(0);
 		p2.setBulletDef(true);
 		p2.setDegreeAngleDef(180);
 		this.addComponent(p2, "main");
-		
-		
+
 		this.restrictCameraHorizontal();
 		this.restrictCameraVertical(-1, 2);
 	}
@@ -184,21 +211,22 @@ public class TestPixelScene extends PixelScene
 	@Override
 	public boolean onTouchUp(int screenX, int screenY, int pointer, int button)
 	{
-		//this.setPixelScale(2);
-		
+		// this.setPixelScale(2);
+
 		return super.onTouchUp(screenX, screenY, pointer, button);
 	}
-	
+
 	boolean follow = true;
+
 	@Override
 	public void update(float deltaTime)
 	{
 		super.update(deltaTime);
-		
+
 		if(follow)
 			this.setCameraPosition(player.getPosition());
-		
+
 		fps.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
-		grounded.setText("Grounded: " +  player.isGrounded());
+		grounded.setText("Grounded: " + player.isGrounded());
 	}
 }

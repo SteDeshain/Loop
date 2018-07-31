@@ -217,6 +217,14 @@ public abstract class Game implements ApplicationListener
 	{
 		return mUIViewport;
 	}
+	/**
+	 * Better set the UIViewport as the same as the screen pixel size.
+	 * Set to any other value may cause some unpredictable issues.
+	 * Because when I dealt with the font's size calculation, I just forget about the viewport thing,
+	 * and do all the calculation with its original pixel size.
+	 * And maybe it's impossible to debug it, I guess.
+	 * @param UIViewport
+	 */
 	public void setUIViewport(Vector2 UIViewport)
 	{
 		mUIViewport = UIViewport;

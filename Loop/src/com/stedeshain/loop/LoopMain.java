@@ -21,6 +21,7 @@ public class LoopMain extends com.stedeshain.loop.Engine.Game
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
 		this.setUIViewport(new Vector2(800, 480));
+		Utils.setChckBtnPicTxtPadding(2);
 		//this.setDebugMode(true);
 		this.setHasDragBug(true);
 
@@ -32,6 +33,7 @@ public class LoopMain extends com.stedeshain.loop.Engine.Game
 		//title.addAssetToLoading(Utils.getMusicAssetPath("canon_in_d@authorbrian_crain.mp3"), Music.class);
 		//title.addAssetToLoading(Utils.getMusicAssetPath("µ­¡©ÅÝ¡© @author Foxtail-Grass Studio.mp3"), Music.class);
 		title.addAssetToLoading(Utils.getImageAssetPath("loop.atlas"), TextureAtlas.class);
+		title.addAssetToLoading(Utils.getImageAssetPath("color_tiles.atlas"), TextureAtlas.class);
 		title.setOneTimeUsed(true);
 		
 		LaunchScene launchScene = new LaunchScene(this, title);

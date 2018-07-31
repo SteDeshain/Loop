@@ -224,7 +224,10 @@ public class Scene extends InputMultiplexer implements Disposable
 		
 		Layer targetLayer = getLayer(layerName);
 		if(targetLayer == null)
+		{
+			Utils.error("Cannot find a Layer with the name \"" + layerName + "\"");
 			return;
+		}
 
 		mComponents.add(component);
 		targetLayer.addComponent(component);
@@ -378,7 +381,7 @@ public class Scene extends InputMultiplexer implements Disposable
 			mPhysicsDebugRenderer.setDrawBodies(true);	//it's default true
 			
 			mShapeRenderer = new ShapeRenderer();
-			mShapeRenderer.setAutoShapeType(true);
+			mShapeRenderer.setAutoShapeType(true);	// ??? What's it for ???
 			
 			//register contact listener
 			mWorld.setContactListener(new ContactListener()

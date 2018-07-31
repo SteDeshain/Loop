@@ -19,7 +19,9 @@ import com.sun.istack.internal.NotNull;
  */
 public class Button extends UIComponent implements Selectable
 {
-	private Label mLabel = null;
+	private ButtonGroup mMotherButtonGroup = null;
+	
+	protected Label mLabel = null;
 	
 	private boolean mIsPressed = false;
 	private boolean mLastIsPressed = false;
@@ -79,6 +81,15 @@ public class Button extends UIComponent implements Selectable
 		super(background);
 		mLabel = new Label(font, text);
 	}
+	
+	void setButtonGroup(ButtonGroup group)
+	{
+		mMotherButtonGroup = group;
+	}
+	public ButtonGroup getButtonGroup()
+	{
+		return mMotherButtonGroup;
+	}
 
 	/**
 	 * MUST NOT call it when a Button is pressed down !!!
@@ -121,6 +132,7 @@ public class Button extends UIComponent implements Selectable
 		}
 	}
 	
+	//TODO necessary?
 	public Label getLabel()
 	{
 		return mLabel;
@@ -351,8 +363,7 @@ public class Button extends UIComponent implements Selectable
 			this.setPressed(false);
 			if(mPressedPointer == event.getPointer() && mLastIsPressed == true && mIsPressed == false)
 			{
-				if(mOnClickListener != null)
-					mOnClickListener.onClick();
+				onClick();
 				if(mHidingSelector && selector != null)
 				{
 					selector.startHiding();
@@ -388,8 +399,7 @@ public class Button extends UIComponent implements Selectable
 				if(isSelected() && event.getKeycode() == Keys.ENTER)
 				{
 					this.setPressed(false);
-					if(mOnClickListener != null)
-						mOnClickListener.onClick();
+					onClick();
 					if(mHidingSelector && selector != null)
 					{
 						selector.startHiding();
@@ -415,6 +425,12 @@ public class Button extends UIComponent implements Selectable
 		/**/
 		
 		return false;
+	}
+	
+	protected void onClick()
+	{
+		if(mOnClickListener != null)
+			mOnClickListener.onClick();
 	}
 	
 	@Override

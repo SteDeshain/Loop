@@ -94,9 +94,9 @@ public class UIComponent extends DrawableComponent
 		mLeftBottomUpdated = true;
 	}
 	
+	//TODO necessary?  
 	public void setLeftBottomPosition(float left, float bottom)
 	{
-		//TODO ...
 		/**
 		mLeftBottomPosition.x = left;
 		mLeftBottomPosition.y = bottom;

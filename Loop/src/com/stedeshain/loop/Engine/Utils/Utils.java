@@ -187,6 +187,16 @@ public class Utils
 		return mDefaultFont;
 	}
 	
+	private static int mChckBtnPicTxtPadding = 0;
+	public static int getDefaultChckBtnPicTxtPadding()
+	{
+		return mChckBtnPicTxtPadding;
+	}
+	public static void setChckBtnPicTxtPadding(int padding)
+	{
+		mChckBtnPicTxtPadding = padding;
+	}
+	
 	/**
 	 * 
 	 * @param origin : origin Vector2 whose axis is horizontal and vertical
