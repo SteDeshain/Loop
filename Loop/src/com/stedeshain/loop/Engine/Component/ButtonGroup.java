@@ -100,7 +100,11 @@ public class ButtonGroup
 				RadioButton curRadio = (RadioButton)curButton;
 				if(curRadio != radioButton)
 				{
-					curRadio.decheck();
+					if(curRadio.isChecked())
+					{
+						curRadio.decheck();
+						break;
+					}
 				}
 			}
 		}

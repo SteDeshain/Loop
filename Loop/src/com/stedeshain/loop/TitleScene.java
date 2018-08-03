@@ -8,7 +8,6 @@ import com.stedeshain.loop.Engine.Component.Button;
 import com.stedeshain.loop.Engine.Component.Button.OnClickListener;
 import com.stedeshain.loop.Engine.Component.ButtonGroup;
 import com.stedeshain.loop.Engine.Component.CheckBox;
-import com.stedeshain.loop.Engine.Component.CheckableButton;
 import com.stedeshain.loop.Engine.Component.Label;
 import com.stedeshain.loop.Engine.Component.RadioButton;
 import com.stedeshain.loop.Engine.Component.UIComponent;

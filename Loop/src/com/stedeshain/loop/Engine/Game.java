@@ -166,6 +166,11 @@ public abstract class Game implements ApplicationListener
 		rawSetScene(scene);
 	}
 
+
+	public void addAssetToLoading(String fileName, Class<?> type)
+	{
+		mGlobalAssets.load(fileName, type);
+	}
 	public AssetsHelper getGlobalAssets()
 	{
 		return mGlobalAssets;

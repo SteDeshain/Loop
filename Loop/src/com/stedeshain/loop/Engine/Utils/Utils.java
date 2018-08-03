@@ -45,6 +45,10 @@ public class Utils
 	{
 		return Constants.LEVELS_PATH + fileName;
 	}
+	public static String getFontPath(String fileName)
+	{
+		return Constants.FONTS_PATH + fileName;
+	}
 
 	public static boolean isEqual(double a, double b) 
 	{  
@@ -239,5 +243,7 @@ public class Utils
 	{
 		if(mDefaultFont != null)
 			mDefaultFont.dispose();
+		
+		FontLibrary.dispose();
 	}
 }
