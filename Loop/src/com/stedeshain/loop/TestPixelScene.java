@@ -140,7 +140,7 @@ public class TestPixelScene extends PixelScene
 		grounded = new Label("Grounded: ");
 		grounded.setViewportAnchor(1, 0.96f);
 		grounded.setSourceAnchor(1, 1);
-		this.addComponent(grounded, "main");
+		this.addComponent(grounded, "debug_ui");
 
 		p = new OneSidedPlatform(new Vector2(0, -2), new Vector2(2, 0.2f), 0, 0, grayRegion);
 		p.setRestitutionDef(0);
